@@ -20,7 +20,7 @@ export async function criarVariosAlunos(body) {
 
 export async function pegarTodosAlunos() {
     try {
-        const dados = await get("/usuario/buscar/alunos");
+        const dados = await get("/usuario?tipo=aluno");
         return { ...dados };
     } catch (erro) {
         throw new Error(erro);
@@ -30,6 +30,15 @@ export async function pegarTodosAlunos() {
 export async function pegarTodosUsuarios() {
     try {
         const dados = await get('/usuario');
+        return { ...dados };
+    } catch (erro) {
+        throw new Error(erro);
+    }
+};
+
+export async function buscarCoordenadores() {
+    try {
+        const dados = await get('/usuario?tipo=professor&coordenador=true');
         return { ...dados };
     } catch (erro) {
         throw new Error(erro);
@@ -58,6 +67,15 @@ export async function pegarParticipacao(id) {
 export async function inserirParticipacaoUsuario(id, body) {
     try {
         const dados = await post('/usuario/' + id + '/participacao', body);
+        return { ...dados };
+    } catch (erro) {
+        throw new Error(erro);
+    }
+};
+
+export async function removerParticipacaoUsuario(id, body) {
+    try {
+        const dados = await patch('/usuario/' + id + '/remover/participacao', body);
         return { ...dados };
     } catch (erro) {
         throw new Error(erro);

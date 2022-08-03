@@ -8,41 +8,49 @@ import { ModalAdicionarSessao } from '../novos-modais/SemestreModal/modalAdicion
 import { Carregando } from '../Carregando';
 
 function HomeCoordenador() {
-    const [semestre, setSemestre] = useState(null);
-    const [aceitacao, setAceitacao] = useState();
-    const [sessao, setSessaoPoster] = useState();
-    const [cadastro, setCadastro] = useState();
-    const [dado, setNovosDados] = useState([]);
-    const atualizarPagina = (value) => setNovosDados(current => current + value);
+    const [semestre, setSemestre] = useState([]);
+    const [permissoes, setPermissoes] = useState({
+        cadastraProjeto: Boolean,
+        professorAceitaProjeto: Boolean,
+        sessaoPoster: Boolean
+    });
+    const [carregando, setCarregando] = useState(true);
+    const [dado, setNovosDados] = useState(false);
+    const atualizarPagina = () => setNovosDados(!dado);
 
     useEffect(() => {
         const buscarSemestre = async () => {
             const res = await pegarSemestreAberto();
             setSemestre(res.data);
+            setPermissoes(res.data[0].permissoes);
+            setCarregando(false);
         };
 
         buscarSemestre();
     }, [dado]);
 
-    async function atualizarInformacoes(e) {
-        e.preventDefault();
-        const idSemestre = semestre._id;
-        await atualizarSemestre(idSemestre, {
-            permissoes: {
-                cadastraProjeto: cadastro,
-                professorAceitaProjeto: aceitacao,
-                sessaoPoster: sessao
-            }
-        });
+    const pegarPermissoes = (e) => {
+        const { name, value } = e.target;
+        if (value === 'false') setPermissoes({ ...permissoes, [name]: false });
+        if (value === 'true') setPermissoes({ ...permissoes, [name]: true });
     };
 
-    if(!semestre) return <Carregando />;
+    async function atualizarInformacoes(e) {
+        e.preventDefault();
+        await atualizarSemestre(semestre[0]._id, {
+            permissoes: permissoes
+        });
+
+        return atualizarPagina();
+    };
+
+    if (carregando) return <Carregando />;
+
     return <> {semestre.length === 0 ? (
         <div>
-            <h2>Não há semestres cadastrados!</h2>
+            <h2 className="center">Não há semestres cadastrados!</h2>
             <div className="red accent-4 center">
                 <div style={{ padding: "50px" }}>
-                    <h3 className="white-text">Cadastrar Semestre</h3>
                     <Link to="/semestre" className="white-text">Cadastrar um novo semestre!</Link>
                 </div>
             </div>
@@ -99,23 +107,36 @@ function HomeCoordenador() {
                                                     <i className="material-icons left" style={{ fontSize: "37px" }}>border_color</i>
                                                     <b>Habilitar Cadastro de Projetos</b>
                                                 </span>
-                                                {!semestre[0].permissoes.cadastraProjeto ? (
+                                                {permissoes.cadastraProjeto === false ? (
                                                     <p>Desabilitado</p>
                                                 ) : (
                                                     <p>Habilitado</p>
                                                 )}
                                             </div>
                                             <div className="col s1 offset-s12 right-align" style={{ marginRight: "1.5rem" }}>
-                                                <p onClick={(e) => setCadastro(e.target.value)}>
-                                                    <label>
-                                                        <input name="group1" id="tres" type="radio" value={true} />
-                                                        <span>Sim</span>
-                                                    </label>
-                                                    <label>
-                                                        <input name="group1" id="quatro" type="radio" value={false} />
-                                                        <span>Não</span>
-                                                    </label>
-                                                </p>
+                                                {permissoes.cadastraProjeto === false ? (
+                                                    <p onClick={(e) => pegarPermissoes(e)}>
+                                                        <label>
+                                                            <input name="cadastraProjeto" id="tres" type="radio" value={true} />
+                                                            <span>Sim</span>
+                                                        </label>
+                                                        <label>
+                                                            <input name="cadastraProjeto" id="quatro" type="radio" value={false} checked />
+                                                            <span>Não</span>
+                                                        </label>
+                                                    </p>) : (
+                                                    <p onClick={(e) => pegarPermissoes(e)}>
+                                                        <label>
+                                                            <input name="cadastraProjeto" id="tres" type="radio" value={true} checked />
+                                                            <span>Sim</span>
+                                                        </label>
+                                                        <label>
+                                                            <input name="cadastraProjeto" id="quatro" type="radio" value={false} />
+                                                            <span>Não</span>
+                                                        </label>
+                                                    </p>
+                                                )
+                                                }
                                             </div>
                                         </div>
                                     </li>
@@ -128,23 +149,36 @@ function HomeCoordenador() {
                                                     <i className="material-icons left" style={{ fontSize: "37px" }}>supervisor_account</i>
                                                     <b>Habilitar Aceitação do Professor</b>
                                                 </span>
-                                                {!semestre[0].permissoes.professorAceitaProjeto ? (
+                                                {permissoes.professorAceitaProjeto === false ? (
                                                     <p>Desabilitado</p>
                                                 ) : (
                                                     <p>Habilitado</p>
                                                 )}
                                             </div>
                                             <div className="col s1 offset-s12 right-align" style={{ marginRight: "1.5rem" }}>
-                                                <p onClick={(e) => setAceitacao(e.target.value)}>
-                                                    <label>
-                                                        <input name="group2" id="sete" type="radio" value={true} />
-                                                        <span>Sim</span>
-                                                    </label>
-                                                    <label>
-                                                        <input name="group2" id="oito" type="radio" value={false} />
-                                                        <span>Não</span>
-                                                    </label>
-                                                </p>
+                                                {permissoes.professorAceitaProjeto === false ? (
+                                                    <p onClick={(e) => pegarPermissoes(e)}>
+                                                        <label>
+                                                            <input name="professorAceitaProjeto" id="sete" type="radio" value={true} />
+                                                            <span>Sim</span>
+                                                        </label>
+                                                        <label>
+                                                            <input name="professorAceitaProjeto" id="oito" type="radio" value={false} checked />
+                                                            <span>Não</span>
+                                                        </label>
+                                                    </p>
+                                                ) : (
+                                                    <p onClick={(e) => pegarPermissoes(e)}>
+                                                        <label>
+                                                            <input name="professorAceitaProjeto" id="sete" type="radio" value={true} checked />
+                                                            <span>Sim</span>
+                                                        </label>
+                                                        <label>
+                                                            <input name="professorAceitaProjeto" id="oito" type="radio" value={false} />
+                                                            <span>Não</span>
+                                                        </label>
+                                                    </p>
+                                                )}
                                             </div>
                                         </div>
                                     </li>
@@ -157,23 +191,36 @@ function HomeCoordenador() {
                                                     <i className="material-icons left" style={{ fontSize: "37px" }}>assignment</i>
                                                     <b>Habilitar Sessão de Pôster</b>
                                                 </span>
-                                                {!semestre[0].permissoes.sessaoPoster ? (
+                                                {permissoes.sessaoPoster === false ? (
                                                     <p>Desabilitado</p>
                                                 ) : (
                                                     <p>Habilitado</p>
                                                 )}
                                             </div>
                                             <div className="col s1 offset-s12 right-align" style={{ marginRight: "1.5rem" }}>
-                                                <p onClick={(e) => setSessaoPoster(e.target.value)}>
-                                                    <label>
-                                                        <input name="group3" id="onze" type="radio" value={true} />
-                                                        <span>Sim</span>
-                                                    </label>
-                                                    <label>
-                                                        <input name="group3" id="doze" type="radio" value={false} />
-                                                        <span>Não</span>
-                                                    </label>
-                                                </p>
+                                                {permissoes.sessaoPoster === false ? (
+                                                    <p onClick={(e) => pegarPermissoes(e)}>
+                                                        <label>
+                                                            <input name="sessaoPoster" id="onze" type="radio" value={true} />
+                                                            <span>Sim</span>
+                                                        </label>
+                                                        <label>
+                                                            <input name="sessaoPoster" id="doze" type="radio" value={false} checked />
+                                                            <span>Não</span>
+                                                        </label>
+                                                    </p>
+                                                ) : (
+                                                    <p onClick={(e) => pegarPermissoes(e)}>
+                                                        <label>
+                                                            <input name="sessaoPoster" id="onze" type="radio" value={true} checked />
+                                                            <span>Sim</span>
+                                                        </label>
+                                                        <label>
+                                                            <input name="sessaoPoster" id="doze" type="radio" value={false} />
+                                                            <span>Não</span>
+                                                        </label>
+                                                    </p>
+                                                )}
                                             </div>
                                         </div>
                                     </li>
@@ -193,8 +240,9 @@ function HomeCoordenador() {
                     </div>
                 </div>
             </div>
-        </div>
-    )}
+        </div >
+    )
+    }
     </>;
 }
 

@@ -37,7 +37,7 @@ export function ModalOrientadorAceitaConvite({ atualizar, projeto }) {
         await adicionarCronogramaOrientacao(projetoId, dados);
         await aceitarOrientacao(projetoId);
     };
-    
+
     return <>
         <div style={{ marginBottom: '15px' }}>
             <div id="aceitarProjeto" className="modal-open">
@@ -47,6 +47,14 @@ export function ModalOrientadorAceitaConvite({ atualizar, projeto }) {
                         <h4 style={{ marginTop: '1em', fontSize: '1.8em' }}><b>Confirmação</b></h4>
                         <p style={{ marginTop: '2em', fontSize: '1.2em', marginBottom: '1.5em' }}><b>Por favor, preencha o cronograma de orientação.</b></p>
                         <div className="row">
+                            <p>
+                                <label>
+                                    <input class="with-gap" name="group3" type="radio" />
+                                    <span>Presencial</span>
+                                    <input class="with-gap" name="group3" type="radio" />
+                                    <span>On-line</span>
+                                </label>
+                            </p>
                             <div className="input-field col s12">
                                 <input name="local" type="text" onChange={pegarValores} />
                                 <label for="local">Local:</label>
@@ -54,14 +62,14 @@ export function ModalOrientadorAceitaConvite({ atualizar, projeto }) {
                         </div>
                         <div className="row">
                             <div className="input-field col s12">
-                                <input name="horas" type="text" onChange={pegarValores} />
-                                <label for="horas">Horário: </label>
+                                <input name="data" onChange={pegarValores} />
+                                <label for="data">Data: </label>
                             </div>
                         </div>
                         <div className="row">
                             <div className="input-field col s12">
-                                <input name="data" type="date" onChange={pegarValores} />
-                                <label for="data">Data: </label>
+                                <input name="horas" type="text" onChange={pegarValores} />
+                                <label for="horas">Horário: </label>
                             </div>
                         </div>
                     </div>

@@ -38,7 +38,7 @@ export async function pegarSemestre() {
 
 export async function pegarSemestreAberto() {
     try {
-        const dados = await get('/semestre/status/aberto');
+        const dados = await get('/semestre?status=aberto');
         return { ...dados };
     } catch (erro) {
         return { erro }
@@ -90,18 +90,18 @@ export async function fecharSemestre(id) {
     }
 }
 
-export async function deletarAlunos() {
+export async function deletarAlunos(id) {
     try {
-        const dados = await del('/usuario/deletar/alunos');
+        const dados = await del('/usuario/deletar/alunos/' + id);
         return { ...dados };
     } catch (erro) {
         return { erro }
     }
 }
 
-export async function deletarProjetos() {
+export async function deletarProjetos(id) {
     try {
-        const dados = await del('/projeto/');
+        const dados = await del('/projeto/deletar/todos/' + id);
         return { ...dados };
     } catch (erro) {
         return { erro }

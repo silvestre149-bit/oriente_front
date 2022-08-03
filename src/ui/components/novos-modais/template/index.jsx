@@ -6,7 +6,8 @@ import { MdAddBox as Add, MdClose as Close } from "react-icons/md";
 import { pegarTodosUsuarios } from '../../../../api/aluno';
 import { resetarSenha } from '../../../../api/alterarPerfil';
 import { formAluno, formSessao, formSemestre } from './formsModel';
-import { deletarAlunos, deletarProjetos,
+import {
+    deletarAlunos, deletarProjetos,
     deletarUsuarios, fecharSemestre,
     pegarSemestre
 } from '../../../../api/semestre.js';
@@ -33,18 +34,10 @@ export function ModalTemplate({
 }) {
 
     const [semestre, setSemestre] = useState(formSemestre);
-    const [aluno, setAluno] = useState(formAluno);
     const [sessao, setSessao] = useState(formSessao);
     const [status, setStatus] = useState('');
     const [descricao, setDescricao] = useState('');
-    const [feedback, setFeedback] = useState({
-        status: "",
-        descricao: ""
-    });
-    const [usuarios, setUsuarios] = useState();
-    const [semestreSelecionado, setSelecionarSemestre] = useState();
     const [dadosColunas, setDadosColunas] = useState([]);
-    const [items, setItems] = useState([]);
     const [selects, setSelects] = useState();
     const getToken = localStorage.getItem('token');
     const decode = jwt(getToken);
@@ -83,17 +76,6 @@ export function ModalTemplate({
         }
 
         buscarSemestre();
-
-    }, [])
-
-    useEffect(() => {
-        const buscarUsuarios = async () => {
-            const res = await pegarTodosUsuarios();
-
-            setUsuarios(res.data);
-        }
-
-        buscarUsuarios();
 
     }, [])
 
@@ -138,13 +120,7 @@ export function ModalTemplate({
         await deletarAlunos();
         await deletarProjetos();
         await fecharSemestre(semestreID);
-        return setFeedback({ status: 'sucesso', descricao: 'Semestre cancelado com sucesso!' });    
-}
-
-    const cancelarProjeto = (e) => {
-        e.preventDefault();
     }
-
     const aceitarTCC = (e) => {
 
     };
@@ -332,7 +308,6 @@ export function ModalTemplate({
                             </a>
                         </div>
                     </div>
-
                     <div id={nomeRota} className="modal">
                         <div className="modal-content">
                             <a href="#!" className="modal-close btn-flat" style={{ float: "right" }}><Close className="grey-text" style={{ width: '100%', height: '100%' }} /></a>
@@ -385,38 +360,6 @@ export function ModalTemplate({
                     </div>
                 </div>
             </div>}
-
-        {
-            /* Confirmar Cancelamento de Projeto */
-            tipoModal === "confirmacao-projeto" && tipoPagina === "encerramento-projeto" && <div>
-                <div style={{ marginBottom: '15px' }}>
-                    <div className="row">
-                        <div className="col s12">
-                            <a href={rota} className="btn red accent-4 modal-trigger" >Enviar Solicitação
-                            </a>
-                        </div>
-                    </div>
-                    <div id={nomeRota} className="modal">
-                        <div className="modal-content">
-                            <a href="#!" className="modal-close btn-flat" style={{ float: "right" }}><Close className="grey-text" style={{ width: '100%', height: '100%' }} /></a>
-                            <div className="container">
-                                <h4 style={{ marginTop: '1em', fontSize: '1.8em' }}><b>Confirmação de cancelamento</b></h4>
-                                <p style={{ marginTop: '2em', fontSize: '1.2em', marginBottom: '1.5em' }}><b>Tem certeza que deseja enviar a solicitação de cancelamento?</b></p>
-                            </div>
-                        </div>
-                        <div className="modal-footer" style={{
-                            display: "flex", justifyContent: "right", marginBottom: "1.5em", paddingRight: "3rem"
-                        }}>
-                            <MessageTemplate type={status} mensagem={descricao} />
-                            <form onSubmit={cancelarProjeto}>
-                                <button type="submit" id="encerrar" className="modal-close btn red accent-4" style={{ marginRight: '1rem' }}>Enviar</button>
-                            </form>
-                            <button type="button" id="naoEncerrar" className="modal-close btn grey">Não enviar</button>
-                        </div>
-                    </div>
-                </div>
-            </div>}
-
         {
             /* Resetar Senha */
             tipoModal === "confirmacao" && tipoPagina === "resetar" && <div>

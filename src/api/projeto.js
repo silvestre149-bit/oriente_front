@@ -27,9 +27,27 @@ export async function buscarProjetoDoAluno(id) {
     }
 };
 
-export async function buscarCoordenadorDoProjeto(id) {
+export async function buscarProjetoDoProfessor(id) {
     try {
-        const dados = await get('/projeto/coordenador/' + id);
+        const dados = await get('/projeto/professor/' + id);
+        return {...dados };
+    } catch (erro) {
+        return { erro }
+    }
+};
+
+export async function buscarOrientadorDoProjeto(id) {
+    try {
+        const dados = await get('/projeto/orientador/' + id);
+        return {...dados };
+    } catch (erro) {
+        return { erro }
+    }
+};
+
+export async function buscarStatusDoOrientador(id) {
+    try {
+        const dados = await get('/projeto/orientador/status/' + id);
         return {...dados };
     } catch (erro) {
         return { erro }
@@ -54,9 +72,18 @@ export async function buscarSuplenteDoProjeto(id) {
     }
 };
 
+export async function atualizarProjeto(id, body) {
+    try {
+        const dados = await patch('/projeto/' + id, body);
+        return { ...dados };
+    } catch (erro) {
+        throw new Error(erro);
+    }
+};
+
 export async function inserirParticipacaoProjeto(id, body) {
     try {
-        const dados = await post('/projeto/participante/' + id, body);
+        const dados = await patch('/projeto/participante/' + id, body);
         return { ...dados };
     } catch (erro) {
         throw new Error(erro);
@@ -66,6 +93,15 @@ export async function inserirParticipacaoProjeto(id, body) {
 export async function adicionarCronogramaOrientacao(id, body) {
     try {
         const dados = await patch('/projeto/cronograma/' + id, body);
+        return { ...dados };
+    } catch (erro) {
+        throw new Error(erro);
+    }
+};
+
+export async function removerAlunoProjeto(id, body) {
+    try {
+        const dados = await patch('/projeto/remover/aluno/' + id, body);
         return { ...dados };
     } catch (erro) {
         throw new Error(erro);

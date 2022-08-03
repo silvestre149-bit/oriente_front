@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { MdAddBox as Add, MdClose as Close } from "react-icons/md";
-import { 
-    atualizarAluno, 
-    pegarTodosUsuarios, 
-    pegarUsuario, 
-    resetarSenhaAluno } from '../../../../api/aluno.js';
+import {
+    atualizarAluno,
+    pegarTodosUsuarios,
+    pegarUsuario,
+    resetarSenhaAluno
+} from '../../../../api/aluno.js';
 import M from 'materialize-css';
 import './index.css'
 import { pegarSemestre } from "../../../../api/semestre.js";
@@ -19,7 +20,7 @@ const form = {
     senha: String
 }
 
-function EditarAluno({atualizar}) {
+function EditarAluno({ atualizar }) {
 
     const [feedback, setFeedback] = useState({
         status: "",
@@ -43,7 +44,7 @@ function EditarAluno({atualizar}) {
     }, []);
 
     useEffect(() => {
-        const buscarSemestre = async () => { 
+        const buscarSemestre = async () => {
             const res = await pegarSemestre();
             setOptions(res.data);
         };
@@ -52,7 +53,7 @@ function EditarAluno({atualizar}) {
 
         const buscarUsuarios = async () => {
             const res = await pegarTodosUsuarios();
-            setAlunos(res.data); 
+            setAlunos(res.data);
         };
 
         buscarUsuarios();
@@ -104,8 +105,8 @@ function EditarAluno({atualizar}) {
         e.preventDefault();
 
         let res = await buscarCod(formValores.cod)
-        
-        if(res.data)
+
+        if (res.data)
             return setFeedback({
                 status: "falha",
                 descricao: "O TIA inserido já está sendo utilizado!"
@@ -118,7 +119,7 @@ function EditarAluno({atualizar}) {
                 descricao: "Aluno editado com sucesso!"
             });
             atualizar(1);
-        } catch(e) {
+        } catch (e) {
             setFeedback({
                 status: "falha",
                 descricao: "Erro no sistema, tente mais tarde!"
@@ -132,22 +133,22 @@ function EditarAluno({atualizar}) {
     const resetarSenha = async (e) => {
         e.preventDefault();
 
-        await resetarSenhaAluno(alunoID, { senha: alunoSelecionado.cod });
+        await resetarSenhaAluno(alunoID, { senha: alunoSelecionado.cod, tipo: "aluno" });
         setFeedback({
             status: "sucesso",
             descricao: "Senha resetada com sucesso!"
         });
-        atualizar(1);
+        return atualizar(1);
     }
 
-    const resetarCampos = async(e) => {
+    const resetarCampos = async (e) => {
         e.preventDefault();
 
         setValores(form);
         setAlunoSelecionado([]);
         setAluno([]);
     };
-    
+
     return <>
         <br />
         <div style={{ marginBottom: '15px' }}>
@@ -172,6 +173,7 @@ function EditarAluno({atualizar}) {
                             <label>Selecione o aluno</label>
                             <div className="custom-select">
                                 <select value={alunoID} onChange={e => { pegarDadosUsuario(e.target.value); setAluno(e.target.value) }} class="browser-default select-options ">
+                                    <option disabled selected>Selecione um aluno</option>
                                     {listaAlunos.map((aluno, index) => {
                                         return <option key={index} value={aluno.id}>{aluno.nome}</option>
                                     })}
@@ -211,7 +213,6 @@ function EditarAluno({atualizar}) {
                         {alunoSelecionado.tccDuplo === true && <div class="row">
                             <label>Turma</label>
                             <div className="custom-select">
-
                                 <select name="turmasDois" class="browser-default select-options" onChange={(e) => pegarTurmas("turmaDois", e.target.value)}>
                                     <option value="" disabled selected>{alunoSelecionado.turmas[1]}</option>
                                     {(semestresAtivos[0] ? semestresAtivos[0] : [semestresAtivos[0]]).map((turma, index) => {

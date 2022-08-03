@@ -5,55 +5,63 @@ import { pegarSemestreAberto } from '../../../../../api/semestre';
 import { Icon } from 'react-materialize';
 import { AuthContext } from '../../../../context/Auth';
 import { Carregando } from '../../../../components/Carregando';
+import NotificacaoProjetoRecusado from '../../../../components/notificacaoTemplate/projetoRecusado';
 
 export function NotificacoesAluno() {
     const [notificacoes, setNotificacoes] = useState([]);
-    const [semestre, setSemestre] = useState([]);
+    const [atualizar, setAtualizar] = useState(false);
     const { usuario } = useContext(AuthContext);
 
+    const atualizarPagina = () => {
+        setAtualizar(!atualizar);
+    };
+
     useEffect(() => {
-        const buscarSemestreAberto = async () => {
-            const res = await pegarSemestreAberto();
-            setSemestre(res.data);
-        };
         const pegarNotificacoes = async () => {
             const res = await buscarNotificacoes(usuario._id);
             setNotificacoes(res.data);
+            setAtualizar(false);
         };
 
         pegarNotificacoes();
-        buscarSemestreAberto();
-    }, [])
+    }, [atualizar])
 
-    const aceitarConvite = async (e) => {
-        e.preventDefault();
+    if (!notificacoes) return <Carregando />
 
-    }
-
-    const recusarConvite = async (e) => {
-        e.preventDefault();
-
-    }
-
-    if(!notificacoes) return <Carregando />
-    
     return <>
-        <h2 className="center"><Icon style={{ fontSize: "40px" }}>notifications</Icon>Notificações</h2>
         <div class="section">
             <div class="row">
                 <div class="col s12 ">
                     <div class="card white darken-1">
                         <div class="card-content">
-                            <span class="card-title "><b>Notificações novas (Não respondidas)</b></span>
+                            <span class="card-title "><b>
+                                <h5 className="center">
+                                    <Icon style={{ fontSize: "40px" }}>
+                                        notifications
+                                    </Icon>
+                                </h5>
+                                Notificações novas (Não respondidas)</b></span>
                             <hr />
                             {notificacoes.map((notificacao) => {
-                                {
-                                    switch (notificacao.tipo) {
-                                        case 'participacao':
-                                            return <NotificacaoParticipacao
-                                                remetente={notificacao.remetenteNome}
-                                                titulo={notificacao.titulo}
-                                                projetoId={notificacao.projetoId} />
+                                if (usuario.participacoes.length >= 1) {
+                                    if (notificacao.tipo === 'recusado') {
+                                        return <NotificacaoProjetoRecusado
+                                            remetente={notificacao.remetenteNome}
+                                            titulo={notificacao.titulo}
+                                            projetoId={notificacao.projetoId}
+                                            convite={notificacao._id}
+                                            atualizar={atualizarPagina}
+                                        />
+                                    }
+                                } else {
+                                    if (notificacao.tipo === 'participacao') {
+                                        return <NotificacaoParticipacao
+                                            remetente={notificacao.remetenteNome}
+                                            titulo={notificacao.titulo}
+                                            projetoId={notificacao.projetoId}
+                                            convite={notificacao._id}
+                                            atualizar={atualizarPagina}
+                                        />
                                     }
                                 }
                             })}

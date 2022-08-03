@@ -17,7 +17,7 @@ export default function NotificacaoAvaliacao({ remetente, titulo, projetoId, atu
         try {
             await aceitarAvaliacao(projetoId);
             await deletarConvite(convite);
-            return atualizar();
+            return atualizar(true);
         } catch(e) {
             return console.log(e);
         }
@@ -27,7 +27,7 @@ export default function NotificacaoAvaliacao({ remetente, titulo, projetoId, atu
         try {
             if (usuario.permissoes.avaliador) await removerAvaliadorProjeto(projetoId);
             await deletarConvite(convite);
-            return atualizar();
+            return atualizar(true);
         } catch(e) {
             return console.log(e);
         }
@@ -55,9 +55,9 @@ export default function NotificacaoAvaliacao({ remetente, titulo, projetoId, atu
                         }} 
                         onClick={(e) => {recusarConvite()}}>Recusar</Button>
                     </div>
-                    <div className="col s5" />
+                    <div className="col s1" />
                     <Button
-                        onClick={() => { history.push('/informacoes/projeto', { projeto: projetoId, tipo: 'avaliacao', convite: convite }) }}
+                        onClick={() => { history.push('/informacoes/projeto', { projeto: projetoId, tipo: 'avaliacao', convite: convite, remetente: remetente }) }}
                         node="button"
                         style={{
                             marginRight: '5px',

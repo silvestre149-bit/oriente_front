@@ -4,6 +4,7 @@ import { BreadcrumbsSemestre } from '../../Breadcrumbs/SemestreBC';
 import { ModalExcluirSemestre } from '../../novos-modais/SemestreModal/modalExcluir';
 import { ModalAdicionarSemestre } from '../../novos-modais/SemestreModal/AdicionarSemestre';
 import { pegarSemestre } from '../../../../api/semestre';
+import { Carregando } from '../../Carregando';
 function TabelaSemestre() {
 
   const [semestres, setSemestres] = useState([]);
@@ -19,6 +20,7 @@ function TabelaSemestre() {
     buscarSemestres();
   }, [dado])
 
+  if(!semestres) return <Carregando />;
   return <>
     <BreadcrumbsSemestre />
     <div className="section">

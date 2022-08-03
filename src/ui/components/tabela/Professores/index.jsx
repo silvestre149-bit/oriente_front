@@ -37,11 +37,11 @@ function TabelaProfessores() {
     <div className="section">
       <h2 className="center">Lista de Professores</h2>
       <div className="row m-auto">
-        <div className="col s12">
-          <div className="col s8">
+        <div className="row">
+          <div className="col s4">
             <CriarProf atualizar={atualizarTabela} />
           </div>
-          <div className="col s4">
+          <div className='right-align col s8'>
             <EditarProfessor atualizar={atualizarTabela} />
           </div>
         </div>

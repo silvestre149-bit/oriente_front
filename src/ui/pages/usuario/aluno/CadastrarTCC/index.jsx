@@ -1,41 +1,40 @@
-import React, { useContext, useEffect } from 'react';
-import { useState } from 'react';
-import { BotaoVoltar } from '../../../../components/botao/Voltar/index.jsx';
-import { criarParticipacao, cadastrarProjeto } from '../../../../../api/cadastrar.js';
+import React, { useContext, useEffect, useState } from 'react';
+import { AuthContext } from '../../../../context/Auth/index.jsx';
 import { inserirParticipacaoUsuario, pegarTodosAlunos, pegarUsuario } from '../../../../../api/aluno.js';
 import { inserirParticipacaoProjeto } from '../../../../../api/projeto.js';
-import MessageTemplate from '../../../../components/errorMessageTemplate/index.jsx';
-import { Carregando } from '../../../../components/Carregando/index.jsx';
-import { buscarProfessores } from '../../../../../api/professor.js';
+import { criarParticipacao, cadastrarProjeto } from '../../../../../api/cadastrar.js';
 import { enviarConvitesAosParticipantes } from '../../../../../api/convites.js';
-import { AuthContext } from '../../../../context/Auth/index.jsx';
+import { buscarProfessores } from '../../../../../api/professor.js';
+import { BotaoVoltar } from '../../../../components/botao/Voltar/index.jsx';
+import { Carregando } from '../../../../components/Carregando/index.jsx';
+import MessageTemplate from '../../../../components/errorMessageTemplate/index.jsx';
 
 const feedbackForm = {
     status: "",
     descricao: ""
 };
 
-export default function CadastrarTCC({ atualizar}) {
+const participantesForm = {
+    participanteUm: "",
+    participanteDois: "",
+    participanteTres: "",
+    orientador: ""
+}
+
+export default function CadastrarTCC({ atualizar }) {
     const { usuario } = useContext(AuthContext);
     const [projeto, setProjeto] = useState({
         titulo: "",
         descricao: "",
-        disciplina: ""
+        disciplina: "",
+        semestre: usuario.semestre,
     });
-    const [participantes, setParticipantes] = useState({
-        participanteUm: "",
-        participanteDois: "",
-        participanteTres: "",
-        orientador: "",
-        avaliador: "",
-        suplente: ""
-    });
+    const [participantes, setParticipantes] = useState(participantesForm);
     const [dadosUsuario, setUsuario] = useState(null);
     const [alunos, setAlunos] = useState();
     const [professores, setProfessores] = useState();
     const [orientador, setOrientador] = useState();
-    const [avaliador, setAvaliador] = useState();
-    const [suplente, setSuplente] = useState();
+    const [escolherParticipantes, setEscolha] = useState(false);
     const [feedback, setFeedback] = useState({
         participante: feedbackForm,
         professores: feedbackForm,
@@ -72,10 +71,8 @@ export default function CadastrarTCC({ atualizar}) {
             });
 
         setParticipantes({ ...participantes, [name]: value });
-
-        if(name === "orientador") await pegarUsuario(value).then(res => setOrientador(res.data));
-        if(name === "avaliador") await pegarUsuario(value).then(res => setAvaliador(res.data));
-        if(name === "suplente") await pegarUsuario(value).then(res => setSuplente(res.data));
+        
+        if (name === "orientador") await pegarUsuario(value).then(res => setOrientador(res.data));
     };
 
     const enviarProjeto = async (e) => {
@@ -111,8 +108,8 @@ export default function CadastrarTCC({ atualizar}) {
             const projetoInfo = await cadastrarProjeto(projeto);
             const participacaoAluno = await criarParticipacao({
                 nome: usuario.nome,
-                turmas: dadosUsuario.turmas,
                 cod: usuario.cod,
+                turmas: dadosUsuario.turmas,
                 tipo: 'aluno',
                 usuarioId: usuario._id,
                 projetoId: projetoInfo.data._id
@@ -125,22 +122,6 @@ export default function CadastrarTCC({ atualizar}) {
                 usuarioId: participantes.orientador,
                 projetoId: projetoInfo.data._id
             });
-            const participacaoAvaliador = await criarParticipacao({
-                nome: avaliador.nome,
-                tipo: 'avaliador',
-                cod: avaliador.cod,
-                status: 'pendente',
-                usuarioId: participantes.avaliador,
-                projetoId: projetoInfo.data._id
-            });
-            const participacaoSuplente = await criarParticipacao({
-                nome: suplente.nome,
-                tipo: 'suplente',
-                cod: suplente.cod,
-                status: 'pendente',
-                usuarioId: participantes.suplente,
-                projetoId: projetoInfo.data._id
-            });
             await enviarConvitesAosParticipantes({
                 ids: participantes, dados: {
                     titulo: projeto.titulo,
@@ -151,10 +132,8 @@ export default function CadastrarTCC({ atualizar}) {
                 }
             });
             await inserirParticipacaoUsuario(usuario._id, participacaoAluno);
-            await inserirParticipacaoProjeto(projetoInfo.data._id, participacaoAluno);
-            await inserirParticipacaoProjeto(projetoInfo.data._id, participacaoOrientador);
-            await inserirParticipacaoProjeto(projetoInfo.data._id, participacaoAvaliador);
-            await inserirParticipacaoProjeto(projetoInfo.data._id, participacaoSuplente);
+            await inserirParticipacaoProjeto(projetoInfo.data._id, participacaoAluno.data);
+            await inserirParticipacaoProjeto(projetoInfo.data._id, participacaoOrientador.data);
             setFeedback({
                 resultado: {
                     status: "sucesso",
@@ -191,11 +170,7 @@ export default function CadastrarTCC({ atualizar}) {
                             <h4>Disciplina</h4>
                             {dadosUsuario.turmas.turmaDois ? (
                                 <div>
-                                    <form onChange={e => setProjeto({ ...projeto, "disciplina": e.target.value })}>
-                                        <label>
-                                            <input name="group1" value="TCC I" type="radio" />
-                                            <span>TCC I</span>
-                                        </label>
+                                    <form onClick={(e) => setProjeto({ ...projeto, disciplina: e.target.value })}>
                                         <label>
                                             <input name="group1" value="TCC II" type="radio" />
                                             <span>TCC II</span>
@@ -204,7 +179,7 @@ export default function CadastrarTCC({ atualizar}) {
                                 </div>
                             ) : (
                                 <div>
-                                    <form onChange={e => setProjeto({ ...projeto, "disciplina": e.target.value })}>
+                                    <form onClick={(e) => setProjeto({ ...projeto, disciplina: e.target.value })}>
                                         <label>
                                             <input name="group1" value="TCC I" type="radio" />
                                             <span>TCC I</span>
@@ -213,60 +188,64 @@ export default function CadastrarTCC({ atualizar}) {
                                 </div>
                             )}
                             <strong>
-                                <h4>Participantes</h4>
+                                <h4>Tem outros participantes?</h4>
                             </strong>
-                            <MessageTemplate mensagem={{ ...feedback.participantes }} />
-                            <select name="participanteUm" class="browser-default" value={participantes.participanteUm} onChange={e => { pegarParticipantes(e); }}>
-                                <option selected>Escolha o participante 1 do seu grupo (caso não tenha, escolha esta opção)</option>
-                                {alunos.filter((aluno) => {
-                                    return aluno.participacoes.length <= 0 && aluno._id != usuario._id
-                                }).map((aluno, index) => {
-                                    return <option key={index} value={aluno._id}>{aluno.nome}</option>;
-                                })}
-                            </select>
-                            <select name="participanteDois" class="browser-default" value={participantes.participanteDois} onChange={e => pegarParticipantes(e)}>
-                                <option selected>Escolha o participante 2 do seu grupo (caso não tenha, não escolha nenhuma opção)</option>
-                                {alunos.filter((aluno) => {
-                                    return aluno.participacoes.length <= 0 && aluno._id != usuario._id
-                                }).map((aluno, index) => {
-                                    return <option key={index} value={aluno._id} >{aluno.nome}</option>;
-                                })}
-                            </select>
-                            <select name="participanteTres" class="browser-default" value={participantes.participanteTres} onChange={e => pegarParticipantes(e)}>
-                                <option selected>Escolha o participante 3 do seu grupo (caso não tenha, não escolha nenhuma opção)</option>
-                                {alunos.filter((aluno) => {
-                                    return aluno.participacoes.length <= 0 && aluno._id != usuario._id
-                                }).map((aluno, index) => {
-                                    return <option key={index} value={aluno._id}>{aluno.nome}</option>;
-                                })}
-                            </select>
+                            <form onChange={(e) => { setEscolha(e.target.value) }}>
+                                <label>
+                                    <input name="group1" value={true} type="radio" />
+                                    <span>Sim</span>
+                                </label>
+                                <label>
+                                    <input onClick={e => setParticipantes(participantesForm)} name="group1" value={false} type="radio" />
+                                    <span>Não</span>
+                                </label>
+                            </form>
+                            {escolherParticipantes === "false" && (
+                                <></>
+                            )}
+                            {escolherParticipantes === "true" && (
+                                <>
+                                    <MessageTemplate mensagem={{ ...feedback.participantes }} />
+                                    <select name="participanteUm" class="browser-default" value={participantes.participanteUm} onChange={e => { pegarParticipantes(e); }}>
+                                        <option selected>Escolha o participante 1 do seu grupo</option>
+                                        {alunos.sort((a, b) => {
+                                            return a.nome.localeCompare(b.nome);
+                                        }).filter((aluno) => {
+                                            if(!usuario.turmas.turmaUm) return aluno.turmas.turmaDois && aluno.participacoes.length <= 0 && aluno._id != usuario._id;
+                                            if(!usuario.turmas.turmaDois) return aluno.turmas.turmaUm && aluno.participacoes.length <= 0 && aluno._id != usuario._id;
+                                        }).map((aluno, index) => {
+                                            return <option key={index} value={aluno._id}>{aluno.nome}</option>;
+                                        })}
+                                    </select>
+                                    <select name="participanteDois" class="browser-default" value={participantes.participanteDois} onChange={e => pegarParticipantes(e)}>
+                                        <option selected>Escolha o participante 2 do seu grupo (caso não tenha, não escolha nenhuma opção)</option>
+                                        {alunos.sort((a, b) => {
+                                            return a.nome.localeCompare(b.nome);
+                                        }).filter((aluno) => {
+                                            return aluno.participacoes.length <= 0 && aluno._id != usuario._id
+                                        }).map((aluno, index) => {
+                                            return <option key={index} value={aluno._id} >{aluno.nome}</option>;
+                                        })}
+                                    </select>
+                                    <select name="participanteTres" class="browser-default" value={participantes.participanteTres} onChange={e => pegarParticipantes(e)}>
+                                        <option selected>Escolha o participante 3 do seu grupo (caso não tenha, não escolha nenhuma opção)</option>
+                                        {alunos.sort((a, b) => {
+                                            return a.nome.localeCompare(b.nome);
+                                        }).filter((aluno) => {
+                                            return aluno.participacoes.length <= 0 && aluno._id != usuario._id
+                                        }).map((aluno, index) => {
+                                            return <option key={index} value={aluno._id}>{aluno.nome}</option>;
+                                        })}
+                                    </select>
+                                </>
+                            )
+
+                            }
                             <strong>
                                 <h4 className="left">Orientador</h4>
                             </strong>
                             <select name="orientador" class="browser-default" value={participantes.orientador} onChange={e => pegarParticipantes(e)}>
                                 <option selected>Escolha o professor orientador</option>
-                                {professores.filter((professor) => {
-                                    return professor.permissoes.orientador === true
-                                }).map((professor, index) => {
-                                    return <option key={index} value={professor._id}>{professor.nome}</option>;
-                                })}
-                            </select>
-                            <strong>
-                                <h4 className="left">Avaliador</h4>
-                            </strong>
-                            <select name="avaliador" class="browser-default" value={participantes.avaliador} onChange={e => pegarParticipantes(e)}>
-                                <option selected>Escolha o professor avaliador</option>
-                                {professores.filter((professor) => {
-                                    return professor.permissoes.avaliador === true
-                                }).map((professor, index) => {
-                                    return <option key={index} value={professor._id}>{professor.nome}</option>;
-                                })}
-                            </select>
-                            <strong>
-                                <h4 className="left">Suplente</h4>
-                            </strong>
-                            <select name="suplente" class="browser-default" value={participantes.suplente} onChange={e => pegarParticipantes(e)}>
-                                <option selected>Escolha o professor suplente</option>
                                 {professores.filter((professor) => {
                                     return professor.permissoes.orientador === true
                                 }).map((professor, index) => {
@@ -280,7 +259,7 @@ export default function CadastrarTCC({ atualizar}) {
                         </form>
                     </div>
                 </div>
-            </div>
-        </div>
+            </div >
+        </div >
     </>;
 }

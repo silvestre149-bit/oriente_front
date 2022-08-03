@@ -16,7 +16,7 @@ export default function NotificacaoSuplente({ remetente, titulo, projetoId, atua
         try {
             await aceitarSuplente(projetoId);
             await deletarConvite(convite);
-            return atualizar();
+            return atualizar(true);
         } catch(e) {
             return console.log(e);
         }
@@ -26,7 +26,7 @@ export default function NotificacaoSuplente({ remetente, titulo, projetoId, atua
         try {
             if (usuario.permissoes.orientador) await removerSuplenteProjeto(projetoId);
             await deletarConvite(convite);
-            return atualizar();
+            return atualizar(true);
         } catch(e) {
             return console.log(e);
         }
@@ -54,9 +54,9 @@ export default function NotificacaoSuplente({ remetente, titulo, projetoId, atua
                         }} 
                         onClick={(e) => {recusarConvite()}}>Recusar</Button>
                     </div>
-                    <div className="col s5" />
+                    <div className="col s1" />
                     <Button
-                        onClick={() => { history.push('/informacoes/projeto', { projeto: projetoId, tipo: 'suplente', convite: convite }) }}
+                        onClick={() => { history.push('/informacoes/projeto', { projeto: projetoId, tipo: 'suplente', convite: convite, remetente: remetente }) }}
                         node="button"
                         style={{
                             marginRight: '5px',

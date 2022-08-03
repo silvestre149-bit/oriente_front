@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { MdKeyboardArrowUp as Up, MdKeyboardArrowDown as Down, MdAddBox as Add, MdClose as Close } from "react-icons/md";
+import { MdClose as Close } from "react-icons/md";
 import M from 'materialize-css';
 
 function ModalCadastroTCC() {
@@ -22,7 +22,6 @@ function ModalCadastroTCC() {
                     </a>
                 </div>
             </div>
-
             <div id="TCCcadastrado" className="modal">
                 <div className="modal-content">
                     <a href="#!" className="modal-close btn-flat" style={{ float: "right" }}><Close className="grey-text" style={{ width: '100%', height: '100%' }} /></a>

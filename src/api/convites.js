@@ -18,9 +18,37 @@ export async function enviarConvitesAosParticipantes(body) {
         return { erro }
     }
 }
+
 export async function buscarNotificacoes(id) {
     try {
         const dados = await get('/notificacoes/' + id);
+        return { ...dados };
+    } catch (erro) {
+        return { erro }
+    }
+}
+
+export async function buscarTodasNotificacoes() {
+    try {
+        const dados = await get('/notificacoes');
+        return { ...dados };
+    } catch (erro) {
+        return { erro }
+    }
+}
+
+export async function buscarPedidoAberto(id) {
+    try {
+        const dados = await get('/notificacoes/pedido/aberto/' + id);
+        return { ...dados };
+    } catch (erro) {
+        return { erro }
+    }
+}
+
+export async function buscarPedidoDeCancelamento() {
+    try {
+        const dados = await get('/notificacoes?tipo=cancelamento');
         return { ...dados };
     } catch (erro) {
         return { erro }

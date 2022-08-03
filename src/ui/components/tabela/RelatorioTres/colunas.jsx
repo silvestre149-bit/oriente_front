@@ -10,11 +10,11 @@ export const COLUNAS_RELATORIO_TRES = [
     },
     {
         Header: '1º Turma',
-        accessor: 'turma1',
+        accessor: 'turmaUm',
     },
     {
         Header: '2º Turma',
-        accessor: 'turma2',
+        accessor: 'turmaDois',
     },
 ]
 

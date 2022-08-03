@@ -1,6 +1,6 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
-import { deletarAlunos, pegarSemestre } from '../../../../api/semestre';
+import { deletarAlunos, deletarProjetos, pegarSemestre } from '../../../../api/semestre';
 import { MdClose as Close } from "react-icons/md";
 import { deletarSemestre } from '../../../../api/semestre';
 import MessageTemplate from '../../errorMessageTemplate';
@@ -37,7 +37,8 @@ export function ModalExcluirSemestre({ atualizar }) {
 
         try {
             await deletarSemestre(semestreSelecionado);
-            await deletarAlunos();
+            await deletarAlunos(semestreSelecionado);
+            await deletarProjetos(semestreSelecionado);
             atualizar(1);
 
             return setFeedback({

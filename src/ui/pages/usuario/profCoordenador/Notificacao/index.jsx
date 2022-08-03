@@ -1,21 +1,19 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { BreadcrumbsNotificacoes } from '../../../../components/Breadcrumbs/NotificacoesBC';
-import { tokenId } from '../../../../../utils/usuario.id.js';
-import { buscarNotificacoes } from '../../../../../api/convites.js';
+import { buscarTodasNotificacoes } from '../../../../../api/convites.js';
 import * as M from 'materialize-css';
-import jwt from 'jwt-decode';
 import NotificacaoOrientacao from '../../../../components/notificacaoTemplate/orientacao';
-import NotificacaoCancelamento from '../../../../components/notificacaoTemplate/cancelamento';
 import { Icon } from 'react-materialize';
 import { Carregando } from '../../../../components/Carregando';
 import NotificacaoAvaliacao from '../../../../components/notificacaoTemplate/avaliacao';
 import NotificacaoSuplente from '../../../../components/notificacaoTemplate/suplente';
+import { AuthContext } from '../../../../context/Auth';
+import NotificacaoCancelamento from '../../../../components/notificacaoTemplate/cancelamento';
 export function NotificacaoProfessor() {
     const [notificacoes, setNotificacoes] = useState();
-    const [atualizar, setAtualizar] = useState(0);
-    const profInfo = jwt(tokenId);
-
-    const atualizarDados = () => setAtualizar(atualizar + 1);
+    const [atualizar, setAtualizar] = useState(false);
+    const { usuario } = useContext(AuthContext);
+    const atualizarDados = () => setAtualizar(true);
 
     useEffect(() => {
         document.addEventListener('DOMContentLoaded', function () {
@@ -24,20 +22,21 @@ export function NotificacaoProfessor() {
         });
 
         const pegarNotificacoes = async () => {
-            const res = await buscarNotificacoes(profInfo._id);
+            const res = await buscarTodasNotificacoes();
             setNotificacoes(res.data);
+            setAtualizar(false);
         };
 
         pegarNotificacoes();
     }, [atualizar])
 
-    if(!notificacoes) return <Carregando />
+    if (!notificacoes) return <Carregando />
 
     return <>
         <BreadcrumbsNotificacoes />
         <div className="section">
             <h2 className="center">
-                <Icon style={{fontSize: "40px"}}>notifications</Icon>
+                <Icon style={{ fontSize: "40px" }}>notifications</Icon>
                 Notificações
             </h2>
         </div>
@@ -47,7 +46,9 @@ export function NotificacaoProfessor() {
                     <div className="section">
                         <div className="row">
                             <div className="col s12">
-                                {notificacoes.map((notificacao) => {
+                                {notificacoes.filter((notificacao) => {
+                                    return notificacao.destinatario === usuario._id || notificacao.destinatario === "coordenador";
+                                }).map((notificacao) => {
                                     {
                                         switch (notificacao.tipo) {
                                             case 'orientacao':
@@ -69,13 +70,16 @@ export function NotificacaoProfessor() {
                                                     remetente={notificacao.remetenteNome}
                                                     titulo={notificacao.titulo}
                                                     projetoId={notificacao.projetoId}
+                                                    convite={notificacao._id}
                                                     atualizar={atualizarDados} />
                                             case 'cancelamento':
                                                 return <NotificacaoCancelamento
                                                     remetente={notificacao.remetenteNome}
                                                     titulo={notificacao.titulo}
+                                                    projetoId={notificacao.projetoId}
                                                     descricao={notificacao.descricao}
-                                                    projetoId={notificacao.projetoId} />
+                                                    convite={notificacao._id}
+                                                    atualizar={atualizarDados} />
                                         }
                                     }
                                 })}

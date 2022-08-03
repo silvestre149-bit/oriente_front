@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import { buscarAvaliadorDoProjeto, buscarSuplenteDoProjeto, pegarProjeto } from '../../../../api/projeto';
+import { buscarAvaliadorDoProjeto, buscarSuplenteDoProjeto, pegarProjeto, buscarOrientadorDoProjeto } from '../../../../api/projeto';
 import { MdFormatListBulleted, MdPersonOutline, MdTimer } from 'react-icons/md';
-import { buscarCoordenadorDoProjeto } from '../../../../api/projeto';
 import { Carregando } from '../../Carregando';
 import RecusarConvite from './Botoes/recusar';
 import AceitarConvite from './Botoes/aceitar.jsx';
@@ -10,33 +9,38 @@ import AceitarConviteOrientador from './Botoes/aceitarOrientador';
 
 export function ProjetoDetalhes() {
     const [projeto, setProjeto] = useState({});
-    const [coordenador, setCoordenador] = useState({});
+    const [orientador, setOrientador] = useState({});
     const [avaliador, setAvaliador] = useState({});
     const [suplente, setSuplente] = useState({});
     const [carregando, setCarregando] = useState(true);
+    const [atualizar, setAtualizar] = useState(false);
     const location = useLocation();
     const state = location.state;
-    console.log(projeto);
+
+    const atualizarPagina = () => setAtualizar(!atualizar);
+
     useEffect(() => {
         const buscarProjeto = async () => {
             const res = await pegarProjeto(state.projeto);
             setProjeto(res.data);
         };
         const buscarProfessores = async () => {
-            const coordenador = await buscarCoordenadorDoProjeto(state.projeto);
+            const orientador = await buscarOrientadorDoProjeto(state.projeto);
             const avaliador = await buscarAvaliadorDoProjeto(state.projeto);
             const suplente = await buscarSuplenteDoProjeto(state.projeto);
-            setCoordenador(coordenador.data);
+            setOrientador(orientador.data);
             setAvaliador(avaliador.data);
             setSuplente(suplente.data);
+            setAtualizar(false);
             setCarregando(false);
         };
 
         buscarProjeto();
         buscarProfessores();
-    }, [])
+    }, [atualizar])
 
     if (carregando || !projeto) return <Carregando />
+
     return <>
         <div>
             <h1 className="center">Projeto</h1>
@@ -52,7 +56,7 @@ export function ProjetoDetalhes() {
                                     <AceitarConviteOrientador projeto={projeto._id} convite={state.convite} />
                                 </div>
                                 <div className="col s2">
-                                    <RecusarConvite projeto={projeto._id} tipo="orientador" convite={state.convite} />
+                                    <RecusarConvite aluno={state.remetente} projeto={projeto._id} tipo="orientador" convite={state.convite} />
                                 </div>
                             </div>
                             </>
@@ -63,7 +67,7 @@ export function ProjetoDetalhes() {
                                     <AceitarConvite projeto={projeto._id} tipo="avaliador" convite={state.convite} />
                                 </div>
                                 <div className='col s2'>
-                                    <RecusarConvite projeto={projeto._id} tipo="avaliador" convite={state.convite} />
+                                    <RecusarConvite aluno={state.remetente} projeto={projeto._id} tipo="avaliador" convite={state.convite} />
                                 </div>
                             </div>
                         }
@@ -73,7 +77,25 @@ export function ProjetoDetalhes() {
                                     <AceitarConvite projeto={projeto._id} tipo="suplente" convite={state.convite} />
                                 </div>
                                 <div className='col s2'>
-                                    <RecusarConvite projeto={projeto._id} tipo="suplente" convite={state.convite} />
+                                    <RecusarConvite aluno={state.remetente} projeto={projeto._id} tipo="suplente" convite={state.convite} />
+                                </div>
+                            </div>}
+                        {state.tipo === 'aluno' &&
+                            <div className='row'>
+                                <div className="col s2">
+                                    <AceitarConvite projeto={projeto._id} tipo="aluno" convite={state.convite} atualizar={atualizarPagina} />
+                                </div>
+                                <div className='col s2'>
+                                    <RecusarConvite aluno={state.remetente} projeto={projeto._id} tipo="aluno" convite={state.convite} />
+                                </div>
+                            </div>}
+                        {state.tipo === 'cancelamento' &&
+                            <div className='row'>
+                                <div className="col s2">
+                                    <AceitarConvite projeto={projeto._id} tipo="cancelamento" convite={state.convite} atualizar={atualizarPagina} />
+                                </div>
+                                <div className='col s2'>
+                                    <RecusarConvite aluno={state.remetente} projeto={projeto._id} tipo="aluno" convite={state.convite} />
                                 </div>
                             </div>}
                         <div className="section card-title center">
@@ -108,35 +130,68 @@ export function ProjetoDetalhes() {
                                         <p>
                                         </p>
                                     </li>
-                                    <li className="collection-item avatar">
-                                        <i className="material-icons circle"><MdTimer /></i>
-                                        <span className="title">
-                                            <b>Avaliação do pôster</b>
-                                        </span>
-                                        <p>Data: - Horário:  <br /> Local da avaliação:
-                                        </p>
-                                    </li>
+                                    {projeto.sessaodePoster ? (
+                                        <li className="collection-item avatar">
+                                            <i className="material-icons circle"><MdTimer /></i>
+                                            <span className="title">
+                                                <b>Avaliação do pôster</b>
+                                            </span>
+                                            <p>Data: - Horário:  <br /> Local da avaliação:
+                                            </p>
+                                        </li>
+                                    ) : (
+                                        <li className="collection-item avatar">
+                                            <i className="material-icons circle"><MdTimer /></i>
+                                            <span className="title">
+                                                <b>Avaliação do pôster</b>
+                                            </span>
+                                            <p>Nenhuma sessão de pôster encontrada
+                                            </p>
+                                        </li>
+                                    )}
+                                    {projeto.cronogramaDeOrientacao ? (
+                                        <li className="collection-item avatar">
+                                            <i className="material-icons circle"><MdTimer /></i>
+                                            <span className="title">
+                                                <b>Cronograma de orientação</b>
+                                            </span>
+                                            <p>
+                                                Local da orientação: {projeto.cronogramaDeOrientacao.local} - {projeto.cronogramaDeOrientacao.tipo} <br />
+                                                Data: {projeto.cronogramaDeOrientacao.data} -
+                                                Horário: {projeto.cronogramaDeOrientacao.horas}  <br />
+                                            </p>
+                                        </li>
+                                    ) : (
+                                        <li className="collection-item avatar">
+                                            <i className="material-icons circle"><MdTimer /></i>
+                                            <span className="title">
+                                                <b>Cronograma de orientação</b>
+                                            </span>
+                                            <p>Nenhum cronograma encontrado
+                                            </p>
+                                        </li>
+                                    )}
                                     <li className="collection-item avatar">
                                         <i className="material-icons circle"><MdPersonOutline /> </i>
                                         <span className="title">
                                             <b>Orientador</b>
                                         </span>
-                                        {coordenador ? (
+                                        {orientador ? (
                                             <>
-                                                <p>{coordenador.nome}</p>
-                                                {coordenador.status === 'aceito' ? (
+                                                <p>{orientador.nome}</p>
+                                                {orientador.status === 'aceito' ? (
                                                     <div className="col s1 offset-s12 right-align">
-                                                        <span className="badge green darken-4 white-text text-darken-2">Situação: {coordenador.status}</span>
+                                                        <span className="badge green darken-4 white-text text-darken-2">Situação: {orientador.status}</span>
                                                     </div>
                                                 ) : (
                                                     <div className="col s1 offset-s12 right-align">
-                                                        <span className="badge yellow darken-4 white-text text-darken-2">Situação: {coordenador.status}</span>
+                                                        <span className="badge yellow darken-4 white-text text-darken-2">Situação: {orientador.status}</span>
                                                     </div>
                                                 )}
                                             </>
                                         ) : (
                                             <>
-                                                <p>Nenhum coordenador presente</p>
+                                                <p>Nenhum orientador presente</p>
                                                 <div className="col s1 offset-s12 right-align">
                                                     <span className="badge red darken-4 white-text text-darken-2">Situação:  </span>
                                                 </div>
@@ -154,11 +209,11 @@ export function ProjetoDetalhes() {
                                                 <p>{avaliador.nome}</p>
                                                 {avaliador.status === 'aceito' ? (
                                                     <div className="col s1 offset-s12 right-align">
-                                                        <span className="badge green darken-4 white-text text-darken-2">Situação: {coordenador.status}</span>
+                                                        <span className="badge green darken-4 white-text text-darken-2">Situação: {orientador.status}</span>
                                                     </div>
                                                 ) : (
                                                     <div className="col s1 offset-s12 right-align">
-                                                        <span className="badge yellow darken-4 white-text text-darken-2">Situação: {coordenador.status}</span>
+                                                        <span className="badge yellow darken-4 white-text text-darken-2">Situação: {orientador.status}</span>
                                                     </div>
                                                 )}
                                             </>
@@ -182,11 +237,11 @@ export function ProjetoDetalhes() {
                                                 <p>{suplente.nome}</p>
                                                 {suplente.status === 'aceito' ? (
                                                     <div className="col s1 offset-s12 right-align">
-                                                        <span className="badge green darken-4 white-text text-darken-2">Situação: {coordenador.status}</span>
+                                                        <span className="badge green darken-4 white-text text-darken-2">Situação: {orientador.status}</span>
                                                     </div>
                                                 ) : (
                                                     <div className="col s1 offset-s12 right-align">
-                                                        <span className="badge yellow darken-4 white-text text-darken-2">Situação: {coordenador.status}</span>
+                                                        <span className="badge yellow darken-4 white-text text-darken-2">Situação: {orientador.status}</span>
                                                     </div>
                                                 )}
                                             </>
@@ -245,6 +300,18 @@ export function ProjetoDetalhes() {
                     </div>
                 </div>
             </div>
+            {state.tipo === 'cancelamento' && <div>
+                <div className="card center">
+                    <div style={{ padding: "50px", margin: "50px" }}>
+                        <h4 class="header">Pedido feito por: {state.remetente}</h4>
+                        <p><strong>
+                            Motivo:
+                        </strong>
+                            {state.descricao}
+                        </p>
+                    </div>
+                </div>
+            </div>}
         </div>
     </>
 }

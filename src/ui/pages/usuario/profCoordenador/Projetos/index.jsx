@@ -8,14 +8,6 @@ export function ProjetosProfCoordenador() {
     return <>
         <BreadcrumbsProjetos />
         <h2 className="center">Lista de projetos</h2>
-        <div className="row">
-            <div className="col s9">
-                <ModalEditarTCC />
-            </div>
-            <div className='col s3'>
-                <ModalCadastrarTCC />
-            </div>
-        </div>
         <TabelaProjeto />
         <br />
     </>

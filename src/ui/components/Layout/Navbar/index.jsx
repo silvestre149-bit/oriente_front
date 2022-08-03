@@ -10,6 +10,7 @@ import { MdMenu as Menu } from "react-icons/md";
 import { PERFIL_TYPES } from '../../../../utils/types';
 import { AuthContext } from "../../../context/Auth";
 import { Carregando } from '../../Carregando';
+import { useState } from 'react';
 
 /* components */
 const NavbarProfessor = React.lazy(() => import('./Professor'));
@@ -22,11 +23,10 @@ function Navbar() {
   const contexto = useContext(AuthContext);
   const { perfil, usuario } = contexto;
 
-
   useEffect(() => {
     const elems = document.querySelectorAll('.sidenav');
     Sidenav.init(elems);
-  })
+  });
 
   const sair = () => {
     return <li><Link to="/logout">Sair</Link></li>;

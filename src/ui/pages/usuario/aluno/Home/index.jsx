@@ -6,6 +6,7 @@ import { useContext } from 'react';
 import { AuthContext } from '../../../../context/Auth/index.jsx';
 import FazerCadastroTCC from '../../../../components/CadastrarTCC';
 import { pegarUsuario } from '../../../../../api/aluno.js';
+import { NotificacoesAluno } from '../Notificacoes';
 
 export function HomeAluno() {
     const { usuario } = useContext(AuthContext);
@@ -25,8 +26,8 @@ export function HomeAluno() {
         buscarSemestre();
     }, [])
 
-    if(carregando) return <Carregando />;
-    
+    if (carregando) return <Carregando />;
+
     return <>
         <div>
             {semestre[0].permissoes.cadastraProjeto ? (
@@ -36,13 +37,17 @@ export function HomeAluno() {
                     {dadosUsuario.participacoes.length > 0 ? (
                         <VerTCC />
                     ) : (
-                        <FazerCadastroTCC />
+                        <>
+                            <NotificacoesAluno />
+                            <FazerCadastroTCC />
+                        </>
                     )}
                 </div>
             ) : (
                 <div class="col s12 m7">
                     {dadosUsuario.participacoes.length > 0 ? (
                         <div style={{ margin: "50px" }}>
+                            <NotificacoesAluno />
                             <VerTCC />
                         </div>
                     ) : (

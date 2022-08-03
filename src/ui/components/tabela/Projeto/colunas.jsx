@@ -9,15 +9,19 @@ export const COLUNAS_PROJETO = [
         accessor: 'disciplina',
     },
     {
-        Header: 'Status',
-        accessor: 'status',
-    },
-    {
         Header: 'Orientador',
         accessor: 'orientador',
     },
     {
         Header: 'Situação',
-        accessor: 'aceitacao',
+        accessor: 'situacao',
+    },
+    {
+        Header: 'Alunos',
+        accessor: 'alunos',
+    },
+    {
+        Header: 'Status',
+        accessor: 'status',
     },
 ]

@@ -14,11 +14,11 @@ import { Icon } from 'react-materialize';
 function HomeProf() {
     const [semestre, setSemestre] = useState([]);
     const [notificacoes, setNotificacoes] = useState([]);
-    const [dados, setNovosDados] = useState(0);
+    const [dados, setNovosDados] = useState(false);
     const { usuario } = useContext(AuthContext);
 
-    const atualizarDados = () => {
-        setNovosDados(1 + dados);
+    const atualizarDados = (valor) => {
+        setNovosDados(valor);
     };
 
     useEffect(() => {
@@ -27,6 +27,7 @@ function HomeProf() {
             const resNotificacoes = await buscarNotificacoes(usuario._id);
             setSemestre(resSemestre.data);
             setNotificacoes(resNotificacoes.data);
+            setNovosDados(false);
         };
         buscarDados();
     }, [dados])
@@ -48,11 +49,13 @@ function HomeProf() {
                             <div class="card white darken-1">
                                 <div class="card-content">
                                     <span class="card-title ">
-                                        <Icon style={{ fontSize: "20px" }}>notifications</Icon> 
+                                        <Icon style={{ fontSize: "20px" }}>notifications</Icon>
                                         <b>Notificações novas</b>
                                     </span>
                                     <hr />
-                                    {notificacoes.map((notificacao) => {
+                                    {notificacoes.filter((notificacao) => {
+                                        return notificacao.destinatario === usuario._id || notificacao.destinatario === "coordenador";
+                                    }).map((notificacao) => {
                                         {
                                             switch (notificacao.tipo) {
                                                 case 'orientacao':
@@ -77,19 +80,16 @@ function HomeProf() {
                                                         convite={notificacao._id}
                                                         atualizar={atualizarDados} />
                                                 case 'cancelamento':
-                                                    if (usuario.permissoes.coordenador) {
-                                                        return <NotificacaoCancelamento
-                                                            remetente={notificacao.remetenteNome}
-                                                            titulo={notificacao.titulo}
-                                                            descricao={notificacao.descricao}
-                                                            projetoId={notificacao.projetoId}
-                                                            convite={notificacao._id}
-                                                            atualizar={atualizarDados} />
-                                                    }
+                                                    return <NotificacaoCancelamento
+                                                        remetente={notificacao.remetenteNome}
+                                                        titulo={notificacao.titulo}
+                                                        projetoId={notificacao.projetoId}
+                                                        descricao={notificacao.descricao}
+                                                        convite={notificacao._id}
+                                                        atualizar={atualizarDados} />
                                             }
                                         }
                                     })}
-
                                 </div>
                                 <div class="card-action" style={{
                                     display: "flex", justifyContent: "space-between", alignItens: "center", marginBottom: "1.5em", fontSize: "2vmin"

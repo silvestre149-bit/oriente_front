@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { MdFormatListBulleted, MdPersonOutline, MdTimer } from 'react-icons/md';
 import { Carregando } from '../../../../components/Carregando';
-import { buscarProjetoDoAluno, buscarCoordenadorDoProjeto, buscarAvaliadorDoProjeto, buscarSuplenteDoProjeto } from '../../../../../api/projeto';
+import { buscarProjetoDoAluno, buscarOrientadorDoProjeto, buscarAvaliadorDoProjeto, buscarSuplenteDoProjeto } from '../../../../../api/projeto';
 import { ModalConvidarOrientador } from '../../../../components/novos-modais/ProjetoModal/ConvidarOrientador.jsx';
 import { useContext } from 'react';
 import { AuthContext } from '../../../../context/Auth';
@@ -10,7 +10,7 @@ export default function MeuProjeto() {
     const { usuario } = useContext(AuthContext);
     const [projeto, setProjeto] = useState([]);
     const [dados, setNovosDados] = useState(0);
-    const [coordenador, setCoordenador] = useState();
+    const [orientador, setOrientador] = useState();
     const [avaliador, setAvaliador] = useState();
     const [suplente, setSuplente] = useState();
     const [carregando, setCarregando] = useState(true);
@@ -18,12 +18,12 @@ export default function MeuProjeto() {
     useEffect(() => {
         const buscarProfessores = async () => {
             const projeto = await buscarProjetoDoAluno(usuario._id);
-            const coordenador = await buscarCoordenadorDoProjeto(projeto.data._id);
+            const orientador = await buscarOrientadorDoProjeto(projeto.data._id);
             const avaliador = await buscarAvaliadorDoProjeto(projeto.data._id);
             const suplente = await buscarSuplenteDoProjeto(projeto.data._id);
 
             setProjeto(projeto.data);
-            setCoordenador(coordenador.data);
+            setOrientador(orientador.data);
             setAvaliador(avaliador.data);
             setSuplente(suplente.data);
             setCarregando(false);
@@ -39,6 +39,7 @@ export default function MeuProjeto() {
 
     if (carregando) return <Carregando />
 
+    console.log(orientador);
     return <>
         <div className="card">
             <h1 className="center">Projeto</h1>
@@ -47,7 +48,7 @@ export default function MeuProjeto() {
             <br />
             <br />
             <div className="section">
-                {coordenador ? (
+                {orientador ? (
                     <></>
                 ) : (
                     <ModalConvidarOrientador atualizar={atualizarDados} dadosProjeto={projeto} dadosAluno={usuario} />
@@ -86,35 +87,68 @@ export default function MeuProjeto() {
                                         <p>
                                         </p>
                                     </li>
-                                    <li className="collection-item avatar">
-                                        <i className="material-icons circle"><MdTimer /></i>
-                                        <span className="title">
-                                            <b>Avaliação do pôster</b>
-                                        </span>
-                                        <p>Data: - Horário:  <br /> Local da avaliação:
-                                        </p>
-                                    </li>
+                                    {projeto.sessaodePoster ? (
+                                        <li className="collection-item avatar">
+                                            <i className="material-icons circle"><MdTimer /></i>
+                                            <span className="title">
+                                                <b>Avaliação do pôster</b>
+                                            </span>
+                                            <p>Data: - Horário:  <br /> Local da avaliação:
+                                            </p>
+                                        </li>
+                                    ) : (
+                                        <li className="collection-item avatar">
+                                            <i className="material-icons circle"><MdTimer /></i>
+                                            <span className="title">
+                                                <b>Avaliação do pôster</b>
+                                            </span>
+                                            <p>Nenhuma sessão de pôster encontrada
+                                            </p>
+                                        </li>
+                                    )}
+                                    {projeto.cronogramaDeOrientacao ? (
+                                        <li className="collection-item avatar">
+                                            <i className="material-icons circle"><MdTimer /></i>
+                                            <span className="title">
+                                                <b>Cronograma de orientação</b>
+                                            </span>
+                                            <p>
+                                                Local da orientação: {projeto.cronogramaDeOrientacao.local} - {projeto.cronogramaDeOrientacao.tipo} <br />
+                                                Data: {projeto.cronogramaDeOrientacao.data} <br />
+                                                Horário: {projeto.cronogramaDeOrientacao.horas}  <br />
+                                            </p>
+                                        </li>
+                                    ) : (
+                                        <li className="collection-item avatar">
+                                            <i className="material-icons circle"><MdTimer /></i>
+                                            <span className="title">
+                                                <b>Cronograma de orientação</b>
+                                            </span>
+                                            <p>Nenhum cronograma encontrado
+                                            </p>
+                                        </li>
+                                    )}
                                     <li className="collection-item avatar">
                                         <i className="material-icons circle"><MdPersonOutline /> </i>
                                         <span className="title">
                                             <b>Orientador</b>
                                         </span>
-                                        {coordenador ? (
+                                        {orientador ? (
                                             <>
-                                                <p>{coordenador.nome}</p>
-                                                {coordenador.status === 'aceito' ? (
+                                                <p>{orientador.nome}</p>
+                                                {orientador.status === 'aceito' ? (
                                                     <div className="col s1 offset-s12 right-align">
-                                                        <span className="badge green darken-4 white-text text-darken-2">Situação: {coordenador.status}</span>
+                                                        <span className="badge green darken-4 white-text text-darken-2">Situação: {orientador.status}</span>
                                                     </div>
                                                 ) : (
                                                     <div className="col s1 offset-s12 right-align">
-                                                        <span className="badge yellow darken-4 white-text text-darken-2">Situação: {coordenador.status}</span>
+                                                        <span className="badge yellow darken-4 white-text text-darken-2">Situação: {orientador.status}</span>
                                                     </div>
                                                 )}
                                             </>
                                         ) : (
                                             <>
-                                                <p>Nenhum coordenador presente</p>
+                                                <p>Nenhum orientador presente</p>
                                                 <div className="col s1 offset-s12 right-align">
                                                     <span className="badge red darken-4 white-text text-darken-2">Situação:  </span>
                                                 </div>

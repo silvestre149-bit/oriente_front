@@ -3,6 +3,7 @@ import Perfil from "../../../../pages/usuario/Perfil";
 import { CancelaAluno } from '../../../../pages/usuario/aluno/Cancela/index.jsx';
 import { NotificacoesAluno } from "../../../../pages/usuario/aluno/Notificacoes";
 import Projeto from "../../../../pages/usuario/aluno/Projeto/index.jsx";
+import { ProjetoDetalhes } from "../../../../components/projeto/Detalhes";
 
 /** @type { import("react-router-dom").RouteProps[] } */
 export const ROTAS_ALUNO = [
@@ -25,5 +26,9 @@ export const ROTAS_ALUNO = [
     {
         path: '/cancelar',
         component: CancelaAluno
+    },
+    {
+        path: '/informacoes/projeto',
+        component: ProjetoDetalhes
     }
 ]

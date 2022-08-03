@@ -14,8 +14,8 @@ import { useEffect } from 'react';
 
 export default function NotificacaoOrientacao({ remetente, titulo, projetoId, convite, atualizar }) {
     const history = useHistory();
-    const { usuario } = useContext(AuthContext);
     const location = useLocation();
+    const { usuario } = useContext(AuthContext);
     const [modalTrigger, setTrigger] = useState(false);
     const [semestre, setSemestre] = useState({});
     const [feeedback, setFeedback] = useState({
@@ -25,6 +25,7 @@ export default function NotificacaoOrientacao({ remetente, titulo, projetoId, co
     const [dados, setDados] = useState({
         orientador: usuario.nome,
         email: usuario.email,
+        tipo: "",
         data: "",
         horas: "",
         local: ""
@@ -35,10 +36,10 @@ export default function NotificacaoOrientacao({ remetente, titulo, projetoId, co
             const res = await pegarSemestreAberto();
             setSemestre(res.data);
         }
-        
+
         pegarSemestre();
     }, [])
-    
+
     const pegarValores = (e) => {
         const { name, value } = e.target;
         setDados({ ...dados, [name]: value });
@@ -46,7 +47,7 @@ export default function NotificacaoOrientacao({ remetente, titulo, projetoId, co
 
     const enviarFormulario = async (e) => {
         e.preventDefault();
-        if (dados.data === "" || dados.horas === "" || dados.local === "") {
+        if (dados.data === "" || dados.horas === "" || dados.local === "" || dados.tipo === "") {
             return setFeedback({
                 status: 'falha',
                 descricao: 'Preencha todos os campos'
@@ -71,7 +72,7 @@ export default function NotificacaoOrientacao({ remetente, titulo, projetoId, co
                 descricao: 'Orientação adicionada com sucesso'
             });
 
-            return atualizar();
+            return atualizar(true);
         } catch (e) {
             console.log(e);
 
@@ -89,7 +90,7 @@ export default function NotificacaoOrientacao({ remetente, titulo, projetoId, co
             if (usuario.permissoes.orientador) await removerOrientadorProjeto(projetoId);
             await deletarConvite(convite);
 
-            return atualizar();
+            return atualizar(true);
         } catch (e) {
             return console.log(e);
         }
@@ -125,21 +126,37 @@ export default function NotificacaoOrientacao({ remetente, titulo, projetoId, co
                                     <h4 style={{ marginTop: '1em', fontSize: '1.8em' }}><b>Confirmação</b></h4>
                                     <p style={{ marginTop: '2em', fontSize: '1.2em', marginBottom: '1.5em' }}><b>Por favor, preencha o cronograma de orientação.</b></p>
                                     <div className="row">
+                                        <p>
+                                            <form onChange={(e) => pegarValores(e)}>
+                                                <label>
+                                                    <input class="with-gap" name="tipo" type="radio" value="presencial" />
+                                                    <span>Presencial</span>
+                                                </label>
+                                                <label>
+                                                    <input class="with-gap" name="tipo" type="radio" value="online" />
+                                                    <span>On-line</span>
+                                                </label>
+                                            </form>
+                                        </p>
+                                        {dados.tipo != "" ? (
+                                            <div className="input-field col s12">
+                                                <input name="local" type="text" value={dados.local} onChange={(e) => pegarValores(e)} />
+                                                <label for="local">Local:</label>
+                                            </div> ) : (
+                                                <div></div>
+                                            )
+                                        }
+                                    </div>
+                                    <div className="row">
                                         <div className="input-field col s12">
-                                            <input name="local" type="text" value={dados.local} onChange={(e) => pegarValores(e)} />
-                                            <label for="local">Local:</label>
+                                            <input name="data" type="text" value={dados.data} onChange={(e) => pegarValores(e)} />
+                                            <label for="data">Data: </label>
                                         </div>
                                     </div>
                                     <div className="row">
                                         <div className="input-field col s12">
                                             <input name="horas" type="text" value={dados.horas} onChange={(e) => pegarValores(e)} />
                                             <label for="horas">Horário: </label>
-                                        </div>
-                                    </div>
-                                    <div className="row">
-                                        <div className="input-field col s12">
-                                            <input name="data" type="date" value={dados.data} onChange={(e) => pegarValores(e)} />
-                                            <label for="data">Data: </label>
                                         </div>
                                     </div>
                                 </div>
@@ -160,9 +177,9 @@ export default function NotificacaoOrientacao({ remetente, titulo, projetoId, co
                         }}
                             onClick={(e) => { recusarConvite(e) }}>Recusar</Button>
                     </div>
-                    <div className="col s5" />
+                    <div className="col s1" />
                     <Button
-                        onClick={() => { history.push('/informacoes/projeto', { projeto: projetoId, tipo: 'orientador', convite: convite }) }}
+                        onClick={() => { history.push('/informacoes/projeto', { projeto: projetoId, tipo: 'orientador', convite: convite, remetente: remetente }) }}
                         node="button"
                         style={{
                             marginRight: '5px',

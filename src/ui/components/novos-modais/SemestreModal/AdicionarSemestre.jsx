@@ -6,7 +6,7 @@ import { criarVariosAlunos } from '../../../../api/aluno';
 import * as XLSX from "xlsx";
 import M from 'materialize-css';
 
-export function ModalAdicionarSemestre({atualizar}) {
+export function ModalAdicionarSemestre({ atualizar }) {
     const data = new Date();
     const [semestre, setSemestre] = useState({
         titulo: "",
@@ -21,7 +21,7 @@ export function ModalAdicionarSemestre({atualizar}) {
     var novaLista = [];
 
     useEffect(() => {
-        const buscarSemestre = async() => {
+        const buscarSemestre = async () => {
             const res = await pegarSemestreAberto();
             setSemestreAtivo(res.data);
         };
@@ -71,31 +71,6 @@ export function ModalAdicionarSemestre({atualizar}) {
 
     });
 
-    const listaDeAlunos = alunos.map((e) => {
-        let aluno = {};
-        let verificarTurma = e.turma.slice(0, 2);
-        aluno.nome = e.nome;
-        aluno.cod = JSON.stringify(e.cod);
-        if (verificarTurma === '07') {
-            aluno.turma = e.turma;
-            aluno.etapa = 1
-        } else {
-            aluno.turmaDois = e.turma;
-            aluno.etapa = 2
-        }
-        let alunoTurmas = {
-            "turmaUm": aluno.turma,
-            "turmaDois": aluno.turmaDois
-        };
-        aluno.turmas = alunoTurmas;
-        aluno.campus = JSON.stringify(e.campus);
-        aluno.unidade = JSON.stringify(e.unidade);
-        aluno.componente = e.componente;
-        aluno.curso = JSON.stringify(e.curso);
-        aluno.tipo = e.tipo;
-        return aluno;
-    });
-
     const pegarDadosSemestre = (e, form) => {
         const { name, value } = e.target;
 
@@ -104,7 +79,7 @@ export function ModalAdicionarSemestre({atualizar}) {
 
     const criarNovoSemestre = async (e) => {
         e.preventDefault();
-        
+
         if (semestre.titulo === "" || !semestre.titulo) {
             return setFeedback({
                 status: "falha",
@@ -123,7 +98,32 @@ export function ModalAdicionarSemestre({atualizar}) {
                 descricao: "Estamos processando os dados, por favor, aguarde!"
             });
             const semestreCriado = await criarSemestre(semestre);
-            await atualizarSemestre(semestreCriado.data._id, { $set: { turmas: novaLista }});
+            await atualizarSemestre(semestreCriado.data._id, { $set: { turmas: novaLista } });
+            const listaDeAlunos = alunos.map((e) => {
+                let aluno = {};
+                let verificarTurma = e.turma.slice(0, 2);
+                aluno.nome = e.nome;
+                aluno.cod = JSON.stringify(e.cod);
+                if (verificarTurma === '07') {
+                    aluno.turma = e.turma;
+                    aluno.etapa = 1
+                } else {
+                    aluno.turmaDois = e.turma;
+                    aluno.etapa = 2
+                }
+                let alunoTurmas = {
+                    "turmaUm": aluno.turma,
+                    "turmaDois": aluno.turmaDois
+                };
+                aluno.turmas = alunoTurmas;
+                aluno.campus = JSON.stringify(e.campus);
+                aluno.unidade = JSON.stringify(e.unidade);
+                aluno.componente = e.componente;
+                aluno.semestre = semestreCriado.data._id;
+                aluno.curso = JSON.stringify(e.curso);
+                aluno.tipo = e.tipo;
+                return aluno;
+            });
             await criarVariosAlunos(listaDeAlunos);
             atualizar(1);
 
@@ -141,7 +141,7 @@ export function ModalAdicionarSemestre({atualizar}) {
         }
     };
 
-return <>
+    return <>
         <div>
             <div className="row">
                 <div className="col s12">
