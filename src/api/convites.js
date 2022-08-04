@@ -63,3 +63,21 @@ export async function deletarConvite(id) {
         return { erro }
     }
 }
+
+export async function deletarVariosConvites(id) {
+    try {
+        const dados = await del('/notificacoes/deletar/varias/' + id)
+        return { ...dados };
+    } catch (erro) {
+        return { erro }
+    }
+}
+
+export async function deletarTodosConvites() {
+    try {
+        const dados = await del('/notificacoes/deletar/todas/')
+        return { ...dados };
+    } catch (erro) {
+        return { erro }
+    }
+}

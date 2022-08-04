@@ -8,13 +8,14 @@ import { Carregando } from '../../Carregando';
 function TabelaSemestre() {
 
   const [semestres, setSemestres] = useState([]);
-  const [dado, setNovosDados] = useState(0);
-  const atualizarTabela = (value) => setNovosDados(current => current + value);
+  const [dado, setNovosDados] = useState(false);
+  const atualizarTabela = (value) => setNovosDados(value);
 
   useEffect(() => {
     const buscarSemestres = async () => {
       const res = await pegarSemestre();
       setSemestres(res.data);
+      setNovosDados(false);
     };
     
     buscarSemestres();

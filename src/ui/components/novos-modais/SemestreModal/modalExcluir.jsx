@@ -5,6 +5,7 @@ import { MdClose as Close } from "react-icons/md";
 import { deletarSemestre } from '../../../../api/semestre';
 import MessageTemplate from '../../errorMessageTemplate';
 import M from 'materialize-css';
+import { deletarTodosConvites } from '../../../../api/convites';
 
 export function ModalExcluirSemestre({ atualizar }) {
     const [semestres, setSemestres] = useState([]);
@@ -39,7 +40,8 @@ export function ModalExcluirSemestre({ atualizar }) {
             await deletarSemestre(semestreSelecionado);
             await deletarAlunos(semestreSelecionado);
             await deletarProjetos(semestreSelecionado);
-            atualizar(1);
+            await deletarTodosConvites();
+            atualizar(true);
 
             return setFeedback({
                 status: "sucesso",

@@ -38,8 +38,11 @@ export function HomeAluno() {
                         <VerTCC />
                     ) : (
                         <>
-                            <NotificacoesAluno />
-                            <FazerCadastroTCC />
+                            <div style={{ margin: "50px" }}>
+                                <NotificacoesAluno />
+                                <FazerCadastroTCC />
+                            </div>
+
                         </>
                     )}
                 </div>

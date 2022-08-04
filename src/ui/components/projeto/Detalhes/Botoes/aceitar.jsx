@@ -1,16 +1,28 @@
 import { useHistory } from "react-router-dom";
-import { deletarConvite } from "../../../../../api/convites";
+import { deletarConvite, deletarTodosConvites, deletarVariosConvites } from "../../../../../api/convites";
 import { Button } from "react-materialize";
 import { aceitarAvaliacao, aceitarSuplente } from "../../../../../api/professor";
 import { criarParticipacao } from "../../../../../api/cadastrar";
 import { useContext } from "react";
 import { AuthContext } from "../../../../context/Auth";
-import { inserirParticipacaoUsuario } from "../../../../../api/aluno";
-import { atualizarProjeto, inserirParticipacaoProjeto } from "../../../../../api/projeto";
+import { inserirParticipacaoUsuario, pegarParticipacao, removerParticipacaoUsuario } from "../../../../../api/aluno";
+import { atualizarProjeto, buscarParticipacao, deletarParticipacao, deletarUmProjeto, inserirParticipacaoProjeto } from "../../../../../api/projeto";
+import { useEffect, useState } from "react";
 
 export default function AceitarConvite({ projeto, tipo, convite, atualizar }) {
     const { usuario } = useContext(AuthContext);
     const history = useHistory();
+    const [participacoes, setParticipacao] = useState([]);
+
+    useEffect(() => {
+        const pegarParticipacao = async () => {
+            const res = await buscarParticipacao(projeto);
+            setParticipacao(res.data);
+        }
+
+        pegarParticipacao();
+    }, []);
+    
     const enviarFormulario = async (e) => {
         e.preventDefault();
 
@@ -45,8 +57,15 @@ export default function AceitarConvite({ projeto, tipo, convite, atualizar }) {
                 return history.push('/notificacoes');
             };
             if (tipo === 'cancelamento') {
-                await atualizarProjeto(projeto, { status: 'fechado' });
+                for (let i = 0; i < participacoes.length; i++) {
+                    let id = participacoes[i]._id;
+                    if (participacoes[i].tipo === 'aluno') await removerParticipacaoUsuario(participacoes[i].usuarioId, [id]);
+                    if (participacoes[i].tipo != 'aluno') await deletarParticipacao(id);
+                }
+    
+                await deletarUmProjeto(projeto);
                 await deletarConvite(convite);
+                await deletarVariosConvites(projeto);
 
                 atualizar(true);
                 return history.push('/notificacoes');

@@ -22,7 +22,7 @@ function HomeCoordenador() {
         const buscarSemestre = async () => {
             const res = await pegarSemestreAberto();
             setSemestre(res.data);
-            setPermissoes(res.data[0].permissoes);
+            if (res.data[0]) setPermissoes(res.data[0].permissoes);
             setCarregando(false);
         };
 

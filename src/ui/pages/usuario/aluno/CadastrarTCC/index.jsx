@@ -122,6 +122,7 @@ export default function CadastrarTCC({ atualizar }) {
                 usuarioId: participantes.orientador,
                 projetoId: projetoInfo.data._id
             });
+
             await enviarConvitesAosParticipantes({
                 ids: participantes, dados: {
                     titulo: projeto.titulo,

@@ -1,11 +1,49 @@
 
 import { Collapsible, CollapsibleItem, Icon, Button } from 'react-materialize';
-import { deletarConvite } from '../../../api/convites';
+import { deletarConvite, deletarVariosConvites } from '../../../api/convites';
 import { useHistory } from 'react-router-dom';
+import { buscarParticipacao, deletarParticipacao, deletarUmProjeto, pegarProjeto } from '../../../api/projeto';
+import { useEffect, useState } from 'react';
+import { removerParticipacaoUsuario } from '../../../api/aluno';
 
 
 export default function NotificacaoCancelamento({ remetente, titulo, projetoId, descricao, convite, atualizar }) {
     const history = useHistory();
+    const [projeto, setProjeto] = useState();
+    const [participacao, setParticipacao] = useState();
+    useEffect(() => {
+        const pegarDadosDoProjeto = async () => {
+            const res = await pegarProjeto(projetoId);
+            setProjeto(res.data);
+        };
+
+        const pegarParticipacao = async () => {
+            const res = await buscarParticipacao(projetoId);
+            setParticipacao(res.data);
+        }
+
+        pegarDadosDoProjeto();
+        pegarParticipacao();
+    }, []);
+
+    const aceitarCancelamento = async (e) => {
+        e.preventDefault();
+
+        try {
+            for (let i = 0; i < participacao.length; i++) {
+                let id = participacao[i]._id;
+                if (participacao[i].tipo === 'aluno') await removerParticipacaoUsuario(participacao[i].usuarioId, [id]);
+                if (participacao[i].tipo != 'aluno') await deletarParticipacao(id);
+            }
+
+            await deletarUmProjeto(projetoId);
+            await deletarVariosConvites(projetoId);
+
+            return atualizar(true);
+        } catch (e) {
+            return console.log(e);
+        }
+    }
 
     const recusarConvite = async (e) => {
         e.preventDefault();
@@ -18,6 +56,7 @@ export default function NotificacaoCancelamento({ remetente, titulo, projetoId, 
             return console.log(e);
         }
     }
+
     return <>
         <Collapsible accordion>
             <CollapsibleItem
@@ -36,14 +75,14 @@ export default function NotificacaoCancelamento({ remetente, titulo, projetoId, 
                             marginRight: '5px',
                             backgroundColor: 'red',
                         }}
-                            onClick={() => { }}>Aceitar</Button>
+                            onClick={(e) => { aceitarCancelamento(e) }}>Aceitar</Button>
                     </div>
                     <div className="col s2">
                         <Button style={{
                             marginRight: '5px',
                             backgroundColor: 'red',
                         }}
-                            onClick={(e) => { recusarConvite(e)}}>Recusar</Button>
+                            onClick={(e) => { recusarConvite(e) }}>Recusar</Button>
                     </div>
                     <div className="col s1" />
                     <Button

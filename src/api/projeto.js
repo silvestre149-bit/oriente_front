@@ -1,4 +1,4 @@
-import {get, post, patch } from "./request";
+import {get, post, patch, del } from "./request";
 
 export async function buscarProjetos() {
     try {
@@ -15,6 +15,15 @@ export async function pegarProjeto(id) {
         return { ...dados };
     } catch (erro) {
         throw new Error(erro);
+    }
+};
+
+export async function buscarParticipacao(id) {
+    try {
+        const dados = await get('/participacao?projetoId=' + id);
+        return {...dados };
+    } catch (erro) {
+        return { erro }
     }
 };
 
@@ -81,6 +90,7 @@ export async function atualizarProjeto(id, body) {
     }
 };
 
+
 export async function inserirParticipacaoProjeto(id, body) {
     try {
         const dados = await patch('/projeto/participante/' + id, body);
@@ -129,6 +139,24 @@ export async function removerAvaliadorProjeto(id) {
 export async function removerSuplenteProjeto(id) {
     try {
         const dados = await patch('/projeto/remover/suplente/' + id);
+        return { ...dados };
+    } catch (erro) {
+        throw new Error(erro);
+    }
+};
+
+export async function deletarUmProjeto(id) {
+    try {
+        const dados = await del('/projeto/' + id);
+        return { ...dados };
+    } catch (erro) {
+        throw new Error(erro);
+    }
+};
+
+export async function deletarParticipacao(id) {
+    try {
+        const dados = await del('/participacao/' + id);
         return { ...dados };
     } catch (erro) {
         throw new Error(erro);
