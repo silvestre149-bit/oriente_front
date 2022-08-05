@@ -65,13 +65,13 @@ function NavbarCoordenador() {
     const [navState, setNavState] = useState(false);
     const history = useHistory();
     function changeProf() {
-        if (navState === false) {
-            setNavState(true);
+        if (navState) {
+            setNavState(false);
             navChange(<NavbarProfessor />)
             nameBar('Coordenador');
             history.push('/');
         } else {
-            setNavState(false);
+            setNavState(true);
             navChange(<NavbarCoordenadorContent />)
             nameBar('Professor');
             history.push('/home');

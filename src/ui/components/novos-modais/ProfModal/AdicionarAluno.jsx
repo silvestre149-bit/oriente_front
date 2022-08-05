@@ -106,7 +106,7 @@ export function ModalAdicionarAlunoProjeto({ atualizar, dadosProjeto }) {
                             <form onSubmit={adicionarAluno}>
                                 <select name="avaliador" class="browser-default" value={aluno} onChange={e => { pegarDadosAluno(e.target.value); setAluno(e.target.value) }}>
                                     <option selected>Escolha o aluno</option>
-                                    {alunos.filter((aluno) => {
+                                    {alunos.sort().filter((aluno) => {
                                         if(dadosProjeto.disciplina === 'TCC I') return aluno.participacoes.length === 0 && aluno.tipo === 'aluno' && aluno.turmas.turmaUm;
                                         if(dadosProjeto.disciplina === 'TCC II') return aluno.participacoes.length === 0 && aluno.tipo === 'aluno' && aluno.turmas.turmaDois;
                                     }).map((aluno, index) => {

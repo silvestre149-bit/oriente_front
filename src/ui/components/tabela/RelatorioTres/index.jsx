@@ -27,9 +27,9 @@ function RelatorioTres() {
     alunos.turmaUm = aluno.turmas.turmaUm;
     alunos.turmaDois = aluno.turmas.turmaDois;
     return alunos;
-  })
+  })  
 
-  if(!alunos) return <Carregando />
+  if(!alunos) return <div></div>
   return <>
     <div className="section">
       <section className="white">

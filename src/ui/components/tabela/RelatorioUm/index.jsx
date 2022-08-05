@@ -19,7 +19,7 @@ function RelatorioUm() {
     buscarAlunos();
   }, [])
 
-  if (!alunos) return <Carregando />
+  if (!alunos) return <div></div>
 
   const listaAlunos = alunos.filter((aluno) => {
     return aluno.participacoes.length > 0;

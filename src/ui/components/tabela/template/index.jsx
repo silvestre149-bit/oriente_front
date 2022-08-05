@@ -86,6 +86,7 @@ function MemoTabela({
         /* history.push(linkAlterar + '/' + row.original.id) */
     }, [history, nomeRecurso])
 
+    console.log(pageIndex);
     return <>
 
         <Mensagem
@@ -159,11 +160,11 @@ function MemoTabela({
         <section style={{ display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center' }}>
             {/* Paginação */}
             <div className="flow-text btn red accent-4" style={{ marginTop: '20px', borderRadius: '2em' }}>
-                <button className="btn-flat" style={{ backgroundColor: 'transparent', color: 'white', borderRight: '1px solid white', padding: '0em 0.5em 0em 0em' }} onClick={() => gotoPage(0)} disabled={!canPreviousPage}>{'<'}</button>
+                <button className="btn-flat" style={{ backgroundColor: 'transparent', color: 'white', borderRight: '1px solid white', padding: '0em 0.5em 0em 0em' }} onClick={() => gotoPage(pageIndex - 1)} disabled={!canPreviousPage}>{'<'}</button>
                 <span style={{ margin: '1em', fontSize: '2vmin' }}>
                     <b>Página{' '} {pageIndex + 1} de {pageOptions.length}</b>
                 </span>
-                <button className="btn-flat" style={{ backgroundColor: 'transparent', color: 'white', borderLeft: '1px solid white', padding: '0em 0em 0em 0.5em' }} onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage} >{'>'}</button>
+                <button className="btn-flat" style={{ backgroundColor: 'transparent', color: 'white', borderLeft: '1px solid white', padding: '0em 0em 0em 0.5em' }} onClick={() => gotoPage(pageIndex + 1)} disabled={!canNextPage} >{'>'}</button>
             </div>
         </section>
 

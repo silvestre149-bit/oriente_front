@@ -3,6 +3,7 @@ import { MdAddBox as Add, MdClose as Close } from "react-icons/md";
 import { buscarProfessores, buscarUmProfessor, buscarCod, editarProfessor } from '../../../../api/professor.js';
 import MessageTemplate from "../../errorMessageTemplate/index.jsx";
 import M from 'materialize-css';
+import { resetarSenhaAluno } from "../../../../api/aluno.js";
 
 const form = {
     nome: String,
@@ -109,7 +110,18 @@ export default function EditarProfessor({ atualizar }) {
 
     }
 
-    const resetarCampos = async(e) => {
+    const resetarSenha = async (e) => {
+        e.preventDefault();
+
+        await resetarSenhaAluno(professor, { senha: profInfo.cod, tipo: "professor" });
+        setFeedback({
+            status: "sucesso",
+            descricao: "Senha resetada com sucesso!"
+        });
+        return atualizar(1);
+    }
+
+    const resetarCampos = async (e) => {
         e.preventDefault();
 
         setFormValores(form);
@@ -132,17 +144,20 @@ export default function EditarProfessor({ atualizar }) {
                     </a>
                 </div>
             </div>
-            <div id="editarProfessor" className="modal">
+            <div id="editarProfessor" className="modal left-align">
                 <div className="modal-content">
                     <a onClick={resetarCampos} href="#!" className="modal-close btn-flat">
                         <Close className="grey-text" style={{ width: '100%', height: '100%' }} />
                     </a>
+                    <form onSubmit={resetarSenha} className='right-align'>
+                        <button type="submit" id="editarAluno" className="btn red accent-4 p-2">Resetar senha</button>
+                    </form>
                     <div className="container">
                         <h4 style={{ marginTop: '1em', fontSize: '1.8em' }}><b>Editar Professor</b></h4>
                         <select class="browser-default select-options" value={professor} onChange={e => { pegarDadosProf(e.target.value); setProfessor(e.target.value) }}>
                             <option value="" disabled selected>Selecione um professor</option>
                             {carregado ? (
-                                data.filter((professor) => {
+                                data.sort().filter((professor) => {
                                     return professor.tipo === "professor"
                                 }).map((professor) => {
                                     return <option value={professor._id}>{professor.nome}</option>
