@@ -1,19 +1,19 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { buscarNotificacoes } from '../../../../../api/convites';
 import NotificacaoParticipacao from '../../../../components/notificacaoTemplate/participacao.jsx';
-import { pegarSemestreAberto } from '../../../../../api/semestre';
 import { Icon } from 'react-materialize';
 import { AuthContext } from '../../../../context/Auth';
 import { Carregando } from '../../../../components/Carregando';
 import NotificacaoProjetoRecusado from '../../../../components/notificacaoTemplate/projetoRecusado';
 
-export function NotificacoesAluno() {
+export function NotificacoesAluno({ atualizandoPagina }) {
     const [notificacoes, setNotificacoes] = useState([]);
     const [atualizar, setAtualizar] = useState(false);
     const { usuario } = useContext(AuthContext);
 
     const atualizarPagina = () => {
         setAtualizar(!atualizar);
+        atualizandoPagina(atualizar);
     };
 
     useEffect(() => {

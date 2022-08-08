@@ -18,6 +18,8 @@ function RelatorioTres() {
     buscarAlunos();
   }, [])
 
+  if(!alunos) return <div></div>
+
   const listaAlunos = alunos.filter((aluno) => {
     return aluno.tipo === 'aluno' && aluno.participacoes.length === 0;
   }).map((aluno) => {
@@ -29,7 +31,7 @@ function RelatorioTres() {
     return alunos;
   })  
 
-  if(!alunos) return <div></div>
+  
   return <>
     <div className="section">
       <section className="white">

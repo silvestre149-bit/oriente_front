@@ -13,6 +13,7 @@ export default function NotificacaoProjetoRecusado({ remetente, titulo, atualiza
         }
     };
 
+    console.log(atualizar);
     return <>
         <Collapsible accordion>
             <CollapsibleItem

@@ -57,6 +57,7 @@ export default function NotificacaoOrientacao({ remetente, titulo, projetoId, co
             return console.log(e);
         }
     }
+
     return <>
         <Collapsible accordion>
             <CollapsibleItem

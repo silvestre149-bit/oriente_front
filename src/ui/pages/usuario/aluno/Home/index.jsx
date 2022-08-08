@@ -7,24 +7,30 @@ import { AuthContext } from '../../../../context/Auth/index.jsx';
 import FazerCadastroTCC from '../../../../components/CadastrarTCC';
 import { pegarUsuario } from '../../../../../api/aluno.js';
 import { NotificacoesAluno } from '../Notificacoes';
+import { buscarNotificacoes } from '../../../../../api/convites';
 
 export function HomeAluno() {
     const { usuario } = useContext(AuthContext);
     const [semestre, setSemestre] = useState();
     const [carregando, setCarregando] = useState(true);
     const [dadosUsuario, setDados] = useState();
+    const [existeNotificacoes, setNotificacoes] = useState();
+    const [atualizar, setAtualizar] = useState();
 
+    const atualizarPagina = (value) => setAtualizar(value);
     useEffect(() => {
         const buscarSemestre = async () => {
-            const res = await pegarSemestreAberto();
+            const semestre = await pegarSemestreAberto();
             const resUsuario = await pegarUsuario(usuario._id);
+            const notificacoes = await buscarNotificacoes(usuario._id);
             setDados(resUsuario.data);
-            setSemestre(res.data);
-            setCarregando(false)
+            setSemestre(semestre.data);
+            setNotificacoes(notificacoes.data.length);
+            setCarregando(false);
         };
 
         buscarSemestre();
-    }, [])
+    }, [atualizar])
 
     if (carregando) return <Carregando />;
 
@@ -39,10 +45,15 @@ export function HomeAluno() {
                     ) : (
                         <>
                             <div style={{ margin: "50px" }}>
-                                <NotificacoesAluno />
-                                <FazerCadastroTCC />
+                                {existeNotificacoes > 0 ? (
+                                    <NotificacoesAluno atualizandoPagina={atualizarPagina} />
+                                ) : (
+                                    <>
+                                        <NotificacoesAluno atualizandoPagina={atualizarPagina} />
+                                        <FazerCadastroTCC />
+                                    </>
+                                )}
                             </div>
-
                         </>
                     )}
                 </div>
@@ -50,7 +61,6 @@ export function HomeAluno() {
                 <div class="col s12 m7">
                     {dadosUsuario.participacoes.length > 0 ? (
                         <div style={{ margin: "50px" }}>
-                            <NotificacoesAluno />
                             <VerTCC />
                         </div>
                     ) : (

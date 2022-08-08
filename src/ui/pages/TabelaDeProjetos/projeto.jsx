@@ -40,17 +40,18 @@ function Projeto() {
 
   if (carregando) return <Carregando />;
 
+  console.log(projeto);
   return <>
     <BreadcrumbsProjetoEspecifico />
-    <div className="row">
-      <div className="col s4">
-        <ModalAdicionarAlunoProjeto atualizar={atualizarComponente} dadosProjeto={projeto} />
-      </div>
-      <div className='col s4'>
-        <ModalRemoverAlunoProjeto atualizar={atualizarComponente} dadosProjeto={projeto} />
-      </div>
-    </div>
     <div className="section card-title card">
+      <div className="row">
+        <div className="col s3">
+          <ModalAdicionarAlunoProjeto atualizar={atualizarComponente} dadosProjeto={projeto} />
+        </div>
+        <div className='col s3'>
+          <ModalRemoverAlunoProjeto atualizar={atualizarComponente} dadosProjeto={projeto} />
+        </div>
+      </div>
       <div className="card-content">
         <h4 className="center">{projeto.titulo}</h4>
         <div className="section">
@@ -81,14 +82,25 @@ function Projeto() {
               <p>
               </p>
             </li>
-            <li className="collection-item avatar">
-              <i className="material-icons circle"><MdTimer /></i>
-              <span className="title">
-                <b>Avaliação do pôster</b>
-              </span>
-              <p>Data: - Horário:  <br /> Local da avaliação:
-              </p>
-            </li>
+            {projeto.sessaodePoster ? (
+              <li className="collection-item avatar">
+                <i className="material-icons circle"><MdTimer /></i>
+                <span className="title">
+                  <b>Avaliação do pôster</b>
+                </span>
+                <p>Data: - Horário:  <br /> Local da avaliação:
+                </p>
+              </li>
+            ) : (
+              <li className="collection-item avatar">
+                <i className="material-icons circle"><MdTimer /></i>
+                <span className="title">
+                  <b>Avaliação do pôster</b>
+                </span>
+                <p>Nenhuma sessão de pôster encontrada
+                </p>
+              </li>
+            )}
             {projeto.cronogramaDeOrientacao ? (
               <li className="collection-item avatar">
                 <i className="material-icons circle"><MdTimer /></i>
@@ -96,7 +108,8 @@ function Projeto() {
                   <b>Cronograma de orientação</b>
                 </span>
                 <p>
-                  Data: {projeto.cronogramaDeOrientacao.data} - {projeto.cronogramaDeOrientacao.tipo} <br />
+                  Data: {projeto.cronogramaDeOrientacao.dia} - {projeto.cronogramaDeOrientacao.tipo} <br />
+                  Periodicidade: {projeto.cronogramaDeOrientacao.periodicidade} <br />
                   Horário: {projeto.cronogramaDeOrientacao.horas}  <br />
                   Local da orientação: {projeto.cronogramaDeOrientacao.local}
                 </p>

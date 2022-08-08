@@ -2,7 +2,7 @@ import React from 'react';
 import { TabelaRelatorioUm } from './tabela';
 import { useState } from 'react';
 import { useEffect } from 'react';
-import { pegarTodosAlunos } from '../../../../api/aluno';
+import { pegarTodosAlunosComProjetos } from '../../../../api/aluno';
 import { Carregando } from '../../Carregando';
 
 // import { Container } from './styles';
@@ -12,7 +12,7 @@ function RelatorioUm() {
 
   useEffect(() => {
     const buscarAlunos = async () => {
-      const res = await pegarTodosAlunos();
+      const res = await pegarTodosAlunosComProjetos();
       setAlunos(res.data);
     }
 
@@ -22,15 +22,21 @@ function RelatorioUm() {
   if (!alunos) return <div></div>
 
   const listaAlunos = alunos.filter((aluno) => {
-    return aluno.participacoes.length > 0;
+    return aluno.participacoes.length > 0 && aluno.etapa === 2;
   }).map((aluno) => {
     const alunos = {};
+    const orientador = aluno.projetos[0].participantes.find(
+      participante => participante.tipo === 'orientador'
+    );
     alunos.nome = aluno.nome;
     alunos.cod = aluno.cod;
     alunos.turmaUm = aluno.turmas.turmaUm;
     alunos.turmaDois = aluno.turmas.turmaDois;
+    alunos.titulo = aluno.projetos[0].titulo;
+    alunos.orientador = orientador.nome;
+    alunos.status = orientador.status;
     return alunos;
-  })
+  });
 
   return <>
     <div className="section">

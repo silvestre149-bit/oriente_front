@@ -52,10 +52,10 @@ export function ProjetoDetalhes() {
                     <div>
                         {state.tipo === 'orientador' &&
                             <>  <div className='row'>
-                                <div className="col s2">
+                                <div className="col s2 left">
                                     <AceitarConviteOrientador projeto={projeto._id} convite={state.convite} />
                                 </div>
-                                <div className="col s2">
+                                <div className="col s2 right">
                                     <RecusarConvite aluno={state.remetente} projeto={projeto._id} tipo="orientador" convite={state.convite} />
                                 </div>
                             </div>
@@ -63,38 +63,38 @@ export function ProjetoDetalhes() {
                         }
                         {state.tipo === 'avaliacao' &&
                             <div className='row'>
-                                <div className="col s2">
+                                <div className="col s2 left">
                                     <AceitarConvite projeto={projeto._id} tipo="avaliador" convite={state.convite} />
                                 </div>
-                                <div className='col s2'>
+                                <div className="col s2 right">
                                     <RecusarConvite aluno={state.remetente} projeto={projeto._id} tipo="avaliador" convite={state.convite} />
                                 </div>
                             </div>
                         }
                         {state.tipo === 'suplente' &&
                             <div className='row'>
-                                <div className="col s2">
+                                <div className="col s2 left">
                                     <AceitarConvite projeto={projeto._id} tipo="suplente" convite={state.convite} />
                                 </div>
-                                <div className='col s2'>
+                                <div className="col s2 right">
                                     <RecusarConvite aluno={state.remetente} projeto={projeto._id} tipo="suplente" convite={state.convite} />
                                 </div>
                             </div>}
                         {state.tipo === 'aluno' &&
                             <div className='row'>
-                                <div className="col s2">
+                                <div className="col s2 left">
                                     <AceitarConvite projeto={projeto._id} tipo="aluno" convite={state.convite} atualizar={atualizarPagina} />
                                 </div>
-                                <div className='col s2'>
+                                <div className="col s2 right">
                                     <RecusarConvite aluno={state.remetente} projeto={projeto._id} tipo="aluno" convite={state.convite} />
                                 </div>
                             </div>}
                         {state.tipo === 'cancelamento' &&
                             <div className='row'>
-                                <div className="col s2">
+                                <div className="col s2 left">
                                     <AceitarConvite projeto={projeto._id} tipo="cancelamento" convite={state.convite} atualizar={atualizarPagina} />
                                 </div>
-                                <div className='col s2'>
+                                <div className='col s2 right'>
                                     <RecusarConvite aluno={state.remetente} projeto={projeto._id} tipo="aluno" convite={state.convite} />
                                 </div>
                             </div>}
@@ -156,9 +156,10 @@ export function ProjetoDetalhes() {
                                                 <b>Cronograma de orientação</b>
                                             </span>
                                             <p>
-                                                Local da orientação: {projeto.cronogramaDeOrientacao.local} - {projeto.cronogramaDeOrientacao.tipo} <br />
-                                                Data: {projeto.cronogramaDeOrientacao.data} -
+                                                Data: {projeto.cronogramaDeOrientacao.dia} - {projeto.cronogramaDeOrientacao.tipo} <br />
+                                                Periodicidade: {projeto.cronogramaDeOrientacao.periodicidade} <br />
                                                 Horário: {projeto.cronogramaDeOrientacao.horas}  <br />
+                                                Local da orientação: {projeto.cronogramaDeOrientacao.local}
                                             </p>
                                         </li>
                                     ) : (

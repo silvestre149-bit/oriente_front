@@ -2,15 +2,15 @@
 export const COLUNAS_RELATORIO_DOIS = [
     {
         Header: 'Nome do Aluno',
-        accessor: 'aluno',
+        accessor: 'nome',
     },
     {
         Header: 'TIA',
-        accessor: 'codMatricula',
+        accessor: 'cod',
     },
     {
         Header: 'Turma',
-        accessor: 'turma',
+        accessor: 'turmaDois',
     },
     {
         Header: 'Título do Projeto',
@@ -18,15 +18,15 @@ export const COLUNAS_RELATORIO_DOIS = [
     },
     {
         Header: 'Professor Orientador',
-        accessor: 'professorOrientador',
+        accessor: 'orientador',
     },
     {
         Header: 'Avaliador 1',
-        accessor: 'professorAvaliador1',
+        accessor: 'avaliadorUm',
     },
     {
         Header: 'Avaliador 2',
-        accessor: 'professorAvaliador2',
+        accessor: 'avaliadorDois',
     },
     {
         Header: 'Sessão',

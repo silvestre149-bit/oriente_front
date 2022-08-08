@@ -79,14 +79,25 @@ export default function ProjetosProf() {
                                         <p>
                                         </p>
                                     </li>
-                                    <li className="collection-item avatar">
-                                        <i className="material-icons circle"><MdTimer /></i>
-                                        <span className="title">
-                                            <b>Avaliação do pôster</b>
-                                        </span>
-                                        <p>Data: - Horário:  <br /> Local da avaliação:
-                                        </p>
-                                    </li>
+                                    {projeto.sessaodePoster ? (
+                                        <li className="collection-item avatar">
+                                            <i className="material-icons circle"><MdTimer /></i>
+                                            <span className="title">
+                                                <b>Avaliação do pôster</b>
+                                            </span>
+                                            <p>Data: - Horário:  <br /> Local da avaliação:
+                                            </p>
+                                        </li>
+                                    ) : (
+                                        <li className="collection-item avatar">
+                                            <i className="material-icons circle"><MdTimer /></i>
+                                            <span className="title">
+                                                <b>Avaliação do pôster</b>
+                                            </span>
+                                            <p>Nenhuma sessão de pôster encontrada
+                                            </p>
+                                        </li>
+                                    )}
                                     {projeto.cronogramaDeOrientacao ? (
                                         <li className="collection-item avatar">
                                             <i className="material-icons circle"><MdTimer /></i>

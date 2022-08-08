@@ -71,7 +71,7 @@ export default function CadastrarTCC({ atualizar }) {
             });
 
         setParticipantes({ ...participantes, [name]: value });
-        
+
         if (name === "orientador") await pegarUsuario(value).then(res => setOrientador(res.data));
     };
 
@@ -212,8 +212,8 @@ export default function CadastrarTCC({ atualizar }) {
                                         {alunos.sort((a, b) => {
                                             return a.nome.localeCompare(b.nome);
                                         }).filter((aluno) => {
-                                            if(!usuario.turmas.turmaUm) return aluno.turmas.turmaDois && aluno.participacoes.length <= 0 && aluno._id != usuario._id;
-                                            if(!usuario.turmas.turmaDois) return aluno.turmas.turmaUm && aluno.participacoes.length <= 0 && aluno._id != usuario._id;
+                                            if (!usuario.turmas.turmaUm) return aluno.turmas.turmaDois && aluno.participacoes.length <= 0 && aluno._id != usuario._id;
+                                            if (!usuario.turmas.turmaDois) return aluno.turmas.turmaUm && aluno.participacoes.length <= 0 && aluno._id != usuario._id;
                                         }).map((aluno, index) => {
                                             return <option key={index} value={aluno._id}>{aluno.nome}</option>;
                                         })}
@@ -247,7 +247,9 @@ export default function CadastrarTCC({ atualizar }) {
                             </strong>
                             <select name="orientador" class="browser-default" value={participantes.orientador} onChange={e => pegarParticipantes(e)}>
                                 <option selected>Escolha o professor orientador</option>
-                                {professores.filter((professor) => {
+                                {professores.sort((a, b) => {
+                                    return a.nome.localeCompare(b.nome);
+                                }).filter((professor) => {
                                     return professor.permissoes.orientador === true
                                 }).map((professor, index) => {
                                     return <option key={index} value={professor._id}>{professor.nome}</option>;

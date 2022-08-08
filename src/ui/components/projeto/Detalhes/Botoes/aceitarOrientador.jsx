@@ -9,6 +9,16 @@ import { inserirParticipacaoUsuario } from "../../../../../api/aluno";
 import { useHistory } from "react-router-dom";
 import { AuthContext } from "../../../../context/Auth";
 
+const dias = [
+    "Segunda-feira",
+    "Terça-feira",
+    "Quarta-feira",
+    "Quinta-feira",
+    "Sexta-feira",
+    "Sábado",
+    "Domingo"
+];
+
 export default function AceitarConviteOrientador({ projeto, convite }) {
     const { usuario } = useContext(AuthContext);
     const history = useHistory();
@@ -19,8 +29,10 @@ export default function AceitarConviteOrientador({ projeto, convite }) {
     const [dados, setDados] = useState({
         orientador: usuario.nome,
         email: usuario.email,
-        data: "",
+        dia: "",
         horas: "",
+        tipo: "",
+        periodicidade: "",
         local: ""
     });
 
@@ -65,6 +77,7 @@ export default function AceitarConviteOrientador({ projeto, convite }) {
             })
         }
     };
+
     return <>
         <Modal
             open={false}
@@ -87,11 +100,40 @@ export default function AceitarConviteOrientador({ projeto, convite }) {
                         <h4 style={{ marginTop: '1em', fontSize: '1.8em' }}><b>Confirmação</b></h4>
                         <p style={{ marginTop: '2em', fontSize: '1.2em', marginBottom: '1.5em' }}><b>Por favor, preencha o cronograma de orientação.</b></p>
                         <div className="row">
-                            <div className="input-field col s12">
-                                <input name="local" type="text" value={dados.local} onChange={(e) => pegarValores(e)} />
-                                <label for="local">Local:</label>
-                            </div>
+                            <form onChange={(e) => pegarValores(e)}>
+                                <label>
+                                    <input class="with-gap" name="tipo" type="radio" value="Presencial" />
+                                    <span>Presencial</span>
+                                </label>
+                                <label>
+                                    <input class="with-gap" name="tipo" type="radio" value="On-line" />
+                                    <span>On-line</span>
+                                </label>
+                            </form>
                         </div>
+                        {dados.tipo != "" ? (
+                            <>
+                                <div className="input-field col s12">
+                                    <input name="local" type="text" value={dados.local} onChange={(e) => pegarValores(e)} />
+                                    <label for="local">Local:</label>
+                                </div>
+                                <div className="row">
+                                    <label>Periodicidade</label>
+                                    <form onChange={(e) => pegarValores(e)}>
+                                        <label>
+                                            <input class="with-gap" name="periodicidade" type="radio" value="Semanal" />
+                                            <span>Semanal</span>
+                                        </label>
+                                        <label>
+                                            <input class="with-gap" name="periodicidade" type="radio" value="Quinzenal" />
+                                            <span>Quinzenal</span>
+                                        </label>
+                                    </form>
+                                </div>
+                            </>) : (
+                            <div></div>
+                        )
+                        }
                         <div className="row">
                             <div className="input-field col s12">
                                 <input name="horas" type="text" value={dados.horas} onChange={(e) => pegarValores(e)} />
@@ -99,9 +141,14 @@ export default function AceitarConviteOrientador({ projeto, convite }) {
                             </div>
                         </div>
                         <div className="row">
+                            <label>Dia da semana: </label>
                             <div className="input-field col s12">
-                                <input name="data" type="date" value={dados.data} onChange={(e) => pegarValores(e)} />
-                                <label for="data">Data: </label>
+                                <select className="browser-default select-options" name="dia" onChange={(e) => pegarValores(e)}>
+                                    <option value="" defaultChecked>Selecione o dia da semana</option>
+                                    {dias.map((dia) => {
+                                        return <option value={dia} defaultChecked>{dia}</option>
+                                    })}
+                                </select>
                             </div>
                         </div>
                     </div>

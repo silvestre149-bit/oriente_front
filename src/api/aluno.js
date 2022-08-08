@@ -27,6 +27,15 @@ export async function pegarTodosAlunos() {
     }
 };
 
+export async function pegarTodosAlunosComProjetos() {
+    try {
+        const dados = await get("/usuario/alunos/projetos");
+        return { ...dados };
+    } catch (erro) {
+        throw new Error(erro);
+    }
+};
+
 export async function pegarTodosUsuarios() {
     try {
         const dados = await get('/usuario');

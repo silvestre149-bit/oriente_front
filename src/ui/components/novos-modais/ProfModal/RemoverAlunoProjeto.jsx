@@ -58,6 +58,7 @@ export function ModalRemoverAlunoProjeto({ atualizar, dadosProjeto }) {
         })
     };
 
+    console.log(dadosProjeto);
     return <>
         <div>
             <div>
@@ -84,7 +85,7 @@ export function ModalRemoverAlunoProjeto({ atualizar, dadosProjeto }) {
                                     {dadosProjeto.participantes.filter((aluno) => {
                                         return aluno.tipo === "aluno";
                                     }).map((aluno, index) => {
-                                        return <option key={index} value={aluno._id}>{aluno.nome}</option>;
+                                        return <option key={index} value={aluno.usuarioId}>{aluno.nome}</option>;
                                     })}
                                 </select>
                                 <MessageTemplate mensagem={feedback} />

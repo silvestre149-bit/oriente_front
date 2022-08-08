@@ -22,10 +22,10 @@ export const COLUNAS_RELATORIO_UM = [
     },
     {
         Header: 'Professor Orientador',
-        accessor: 'professor',
+        accessor: 'orientador',
     },
     {
         Header: 'Status',
-        accessor: 'statusProfessor',
+        accessor: 'status',
     },
 ]

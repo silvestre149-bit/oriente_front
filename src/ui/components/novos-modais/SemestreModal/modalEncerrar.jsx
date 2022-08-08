@@ -27,8 +27,8 @@ export function ModalEncerrarSemestre({ atualizar }) {
     const cancelarSemestre = async (e) => {
         e.preventDefault();
 
-        await deletarAlunos();
-        await deletarProjetos();
+        await deletarAlunos(semestre[0]._id);
+        await deletarProjetos(semestre[0]._id);
         await fecharSemestre(semestre[0]._id);
         atualizar(1);
 

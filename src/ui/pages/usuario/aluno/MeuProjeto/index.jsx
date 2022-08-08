@@ -39,7 +39,6 @@ export default function MeuProjeto() {
 
     if (carregando) return <Carregando />
 
-    console.log(orientador);
     return <>
         <div className="card">
             <h1 className="center">Projeto</h1>

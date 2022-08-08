@@ -3,12 +3,11 @@ import { useHistory } from "react-router";
 import M from 'materialize-css';
 import jwt from 'jwt-decode';
 import { MdAddBox as Add, MdClose as Close } from "react-icons/md";
-import { pegarTodosUsuarios } from '../../../../api/aluno';
 import { resetarSenha } from '../../../../api/alterarPerfil';
-import { formAluno, formSessao, formSemestre } from './formsModel';
+import { formSessao, formSemestre } from './formsModel';
 import {
     deletarAlunos, deletarProjetos,
-    deletarUsuarios, fecharSemestre,
+    fecharSemestre,
     pegarSemestre
 } from '../../../../api/semestre.js';
 import MessageTemplate from '../../errorMessageTemplate';

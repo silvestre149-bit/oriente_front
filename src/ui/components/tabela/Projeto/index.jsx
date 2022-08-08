@@ -2,11 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { TabelaComProjetos } from './tabela';
 import { buscarProjetos } from '../../../../api/projeto';
 import { pegarSemestreAberto } from '../../../../api/semestre';
-import { Carregando } from '../../Carregando';
 
 function TabelaProjeto() {
   const [dados, setDados] = useState([]);
-  const [semestre, setSemestre] = useState();
+  const [semestre, setSemestre] = useState([]);
 
   useEffect(() => {
     const buscarDados = async () => {
@@ -23,8 +22,8 @@ function TabelaProjeto() {
     buscarSemestre();
   }, [])
 
-  if (!semestre) return <Carregando />;
   const projetos = dados.filter((projeto) => {
+    if(semestre.length === 0) return [];
     return projeto.semestre = semestre[0]._id;
   }).map((projeto) => {
     let projetos = {};

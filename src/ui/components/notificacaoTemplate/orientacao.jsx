@@ -12,6 +12,16 @@ import { criarParticipacao } from '../../../api/cadastrar.js';
 import { pegarSemestreAberto } from '../../../api/semestre.js';
 import { useEffect } from 'react';
 
+const dias = [
+    "Segunda-feira",
+    "Terça-feira",
+    "Quarta-feira",
+    "Quinta-feira",
+    "Sexta-feira",
+    "Sábado",
+    "Domingo"
+];
+
 export default function NotificacaoOrientacao({ remetente, titulo, projetoId, convite, atualizar }) {
     const history = useHistory();
     const location = useLocation();
@@ -26,7 +36,7 @@ export default function NotificacaoOrientacao({ remetente, titulo, projetoId, co
         orientador: usuario.nome,
         email: usuario.email,
         tipo: "",
-        data: "",
+        dia: "",
         horas: "",
         local: ""
     });
@@ -126,37 +136,55 @@ export default function NotificacaoOrientacao({ remetente, titulo, projetoId, co
                                     <h4 style={{ marginTop: '1em', fontSize: '1.8em' }}><b>Confirmação</b></h4>
                                     <p style={{ marginTop: '2em', fontSize: '1.2em', marginBottom: '1.5em' }}><b>Por favor, preencha o cronograma de orientação.</b></p>
                                     <div className="row">
-                                        <p>
-                                            <form onChange={(e) => pegarValores(e)}>
-                                                <label>
-                                                    <input class="with-gap" name="tipo" type="radio" value="presencial" />
-                                                    <span>Presencial</span>
-                                                </label>
-                                                <label>
-                                                    <input class="with-gap" name="tipo" type="radio" value="online" />
-                                                    <span>On-line</span>
-                                                </label>
-                                            </form>
-                                        </p>
-                                        {dados.tipo != "" ? (
+                                        <form onChange={(e) => pegarValores(e)}>
+                                            <label>
+                                                <input class="with-gap" name="tipo" type="radio" value="Presencial" />
+                                                <span>Presencial</span>
+                                            </label>
+                                            <label>
+                                                <input class="with-gap" name="tipo" type="radio" value="On-line" />
+                                                <span>On-line</span>
+                                            </label>
+                                        </form>
+                                    </div>
+                                    {dados.tipo != "" ? (
+                                        <>
                                             <div className="input-field col s12">
                                                 <input name="local" type="text" value={dados.local} onChange={(e) => pegarValores(e)} />
                                                 <label for="local">Local:</label>
-                                            </div> ) : (
-                                                <div></div>
-                                            )
-                                        }
-                                    </div>
-                                    <div className="row">
-                                        <div className="input-field col s12">
-                                            <input name="data" type="text" value={dados.data} onChange={(e) => pegarValores(e)} />
-                                            <label for="data">Data: </label>
-                                        </div>
-                                    </div>
+                                            </div>
+                                            <div className="row">
+                                                <label>Periodicidade</label>
+                                                <form onChange={(e) => pegarValores(e)}>
+                                                    <label>
+                                                        <input class="with-gap" name="periodicidade" type="radio" value="Semanal" />
+                                                        <span>Semanal</span>
+                                                    </label>
+                                                    <label>
+                                                        <input class="with-gap" name="periodicidade" type="radio" value="Quinzenal" />
+                                                        <span>Quinzenal</span>
+                                                    </label>
+                                                </form>
+                                            </div>
+                                        </>) : (
+                                        <div></div>
+                                    )
+                                    }
                                     <div className="row">
                                         <div className="input-field col s12">
                                             <input name="horas" type="text" value={dados.horas} onChange={(e) => pegarValores(e)} />
                                             <label for="horas">Horário: </label>
+                                        </div>
+                                    </div>
+                                    <div className="row">
+                                        <label>Dia da semana: </label>
+                                        <div className="input-field col s12">
+                                            <select className="browser-default select-options" name="dia" onChange={(e) => pegarValores(e)}>
+                                                <option value="" defaultChecked>Selecione o dia da semana</option>
+                                                {dias.map((dia) => {
+                                                    return <option value={dia} defaultChecked>{dia}</option>
+                                                })}
+                                            </select>
                                         </div>
                                     </div>
                                 </div>
@@ -165,7 +193,7 @@ export default function NotificacaoOrientacao({ remetente, titulo, projetoId, co
                                     display: "flex", justifyContent: "right", marginBottom: "1.5em", paddingRight: "3rem"
                                 }}>
                                     <button type="submit" id="aceitar" className=" btn red accent-4" style={{ marginRight: '1rem' }}>Confirmar</button>
-                                    <button type="button" onClick={e => setTrigger(false)} id="naoAceitar" className="modal-close btn grey">Não confirmar</button>
+                                    <button type="button" id="naoAceitar" className="modal-close btn grey">Não confirmar</button>
                                 </div>
                             </div>
                         </form>
