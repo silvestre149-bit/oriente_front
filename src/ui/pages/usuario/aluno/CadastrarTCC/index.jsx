@@ -14,12 +14,7 @@ const feedbackForm = {
     descricao: ""
 };
 
-const participantesForm = {
-    participanteUm: "",
-    participanteDois: "",
-    participanteTres: "",
-    orientador: ""
-}
+const participantesForm = {}
 
 export default function CadastrarTCC({ atualizar }) {
     const { usuario } = useContext(AuthContext);
@@ -35,6 +30,7 @@ export default function CadastrarTCC({ atualizar }) {
     const [professores, setProfessores] = useState();
     const [orientador, setOrientador] = useState();
     const [escolherParticipantes, setEscolha] = useState(false);
+    const [isDesabilitado, setDesabilitado] = useState(false);
     const [feedback, setFeedback] = useState({
         participante: feedbackForm,
         professores: feedbackForm,
@@ -62,19 +58,12 @@ export default function CadastrarTCC({ atualizar }) {
     const pegarParticipantes = async (e) => {
         const { name, value } = e.target;
 
-        if (Object.values(participantes).includes(value) === true)
-            return setFeedback({
-                participantes: {
-                    status: "falha",
-                    descricao: "Por favor, selecione um usuário diferente para cada campo!"
-                }
-            });
-
         setParticipantes({ ...participantes, [name]: value });
 
         if (name === "orientador") await pegarUsuario(value).then(res => setOrientador(res.data));
     };
 
+    console.log(participantes);
     const enviarProjeto = async (e) => {
         e.preventDefault();
 
@@ -86,7 +75,7 @@ export default function CadastrarTCC({ atualizar }) {
                 }
             });
         }
-        if (participantes.orientador === "") {
+        if (!participantes.orientador) {
             return setFeedback({
                 resultado: {
                     status: "falha",
@@ -104,7 +93,14 @@ export default function CadastrarTCC({ atualizar }) {
             });
         }
 
+        setDesabilitado(true);
+
         try {
+            setFeedback({
+                status: "sucesso",
+                descricao: "Cadastrando projeto, por favor, aguarde."
+            });
+
             const projetoInfo = await cadastrarProjeto(projeto);
             const participacaoAluno = await criarParticipacao({
                 nome: usuario.nome,
@@ -163,7 +159,7 @@ export default function CadastrarTCC({ atualizar }) {
                 <h3 className="center">Preencha os dados do seu projeto</h3>
                 <div>
                     <div className="card-content">
-                        <form onSubmit={enviarProjeto}>
+                        <form onSubmit={e => enviarProjeto(e)}>
                             <h7 className="gray-text left">Nome do Projeto</h7>
                             <input type="text" name="titulo" value={projeto.titulo} onChange={(e) => pegarValores(e)}></input>
                             <h7 className="left">Descrição do projeto</h7>
@@ -208,7 +204,7 @@ export default function CadastrarTCC({ atualizar }) {
                                 <>
                                     <MessageTemplate mensagem={{ ...feedback.participantes }} />
                                     <select name="participanteUm" class="browser-default" value={participantes.participanteUm} onChange={e => { pegarParticipantes(e); }}>
-                                        <option selected>Escolha o participante 1 do seu grupo</option>
+                                        <option selected value={null}>Escolha o participante 1 do seu grupo</option>
                                         {alunos.sort((a, b) => {
                                             return a.nome.localeCompare(b.nome);
                                         }).filter((aluno) => {
@@ -219,7 +215,7 @@ export default function CadastrarTCC({ atualizar }) {
                                         })}
                                     </select>
                                     <select name="participanteDois" class="browser-default" value={participantes.participanteDois} onChange={e => pegarParticipantes(e)}>
-                                        <option selected>Escolha o participante 2 do seu grupo (caso não tenha, não escolha nenhuma opção)</option>
+                                        <option selected value={null}>Escolha o participante 2 do seu grupo (caso não tenha, não escolha nenhuma opção)</option>
                                         {alunos.sort((a, b) => {
                                             return a.nome.localeCompare(b.nome);
                                         }).filter((aluno) => {
@@ -229,7 +225,7 @@ export default function CadastrarTCC({ atualizar }) {
                                         })}
                                     </select>
                                     <select name="participanteTres" class="browser-default" value={participantes.participanteTres} onChange={e => pegarParticipantes(e)}>
-                                        <option selected>Escolha o participante 3 do seu grupo (caso não tenha, não escolha nenhuma opção)</option>
+                                        <option selected value={null}>Escolha o participante 3 do seu grupo (caso não tenha, não escolha nenhuma opção)</option>
                                         {alunos.sort((a, b) => {
                                             return a.nome.localeCompare(b.nome);
                                         }).filter((aluno) => {
@@ -257,7 +253,7 @@ export default function CadastrarTCC({ atualizar }) {
                             </select>
                             <MessageTemplate mensagem={{ ...feedback.resultado }} />
                             <div className="center" style={{ marginTop: "15px" }}>
-                                <button class="btn red accent-4" type="submit" name="action">Cadastrar Projeto</button>
+                                <button class="btn red accent-4" disabled={isDesabilitado} type="submit" name="action">Cadastrar Projeto</button>
                             </div>
                         </form>
                     </div>

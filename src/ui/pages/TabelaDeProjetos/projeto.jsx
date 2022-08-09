@@ -108,7 +108,7 @@ function Projeto() {
                   <b>Cronograma de orientação</b>
                 </span>
                 <p>
-                  Data: {projeto.cronogramaDeOrientacao.dia} - {projeto.cronogramaDeOrientacao.tipo} <br />
+                  Dia da semana: {projeto.cronogramaDeOrientacao.dia} - {projeto.cronogramaDeOrientacao.tipo} <br />
                   Periodicidade: {projeto.cronogramaDeOrientacao.periodicidade} <br />
                   Horário: {projeto.cronogramaDeOrientacao.horas}  <br />
                   Local da orientação: {projeto.cronogramaDeOrientacao.local}

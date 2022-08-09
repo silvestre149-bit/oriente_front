@@ -43,26 +43,22 @@ export function NotificacoesAluno({ atualizandoPagina }) {
                                 Notificações novas (Não respondidas)</b></span>
                             <hr />
                             {notificacoes.map((notificacao) => {
-                                if (usuario.participacoes.length >= 1) {
-                                    if (notificacao.tipo === 'recusado') {
-                                        return <NotificacaoProjetoRecusado
-                                            remetente={notificacao.remetenteNome}
-                                            titulo={notificacao.titulo}
-                                            projetoId={notificacao.projetoId}
-                                            convite={notificacao._id}
-                                            atualizar={atualizarPagina}
-                                        />
-                                    }
-                                } else {
-                                    if (notificacao.tipo === 'participacao') {
-                                        return <NotificacaoParticipacao
-                                            remetente={notificacao.remetenteNome}
-                                            titulo={notificacao.titulo}
-                                            projetoId={notificacao.projetoId}
-                                            convite={notificacao._id}
-                                            atualizar={atualizarPagina}
-                                        />
-                                    }
+                                if (notificacao.tipo === 'recusado') {
+                                    return <NotificacaoProjetoRecusado
+                                        remetente={notificacao.remetenteNome}
+                                        titulo={notificacao.titulo}
+                                        convite={notificacao._id}
+                                        atualizar={atualizarPagina}
+                                    />
+                                }
+                                if (notificacao.tipo === 'participacao') {
+                                    return <NotificacaoParticipacao
+                                        remetente={notificacao.remetenteNome}
+                                        titulo={notificacao.titulo}
+                                        projetoId={notificacao.projetoId}
+                                        convite={notificacao._id}
+                                        atualizar={atualizarPagina}
+                                    />
                                 }
                             })}
                         </div>

@@ -112,9 +112,10 @@ export default function MeuProjeto() {
                                                 <b>Cronograma de orientação</b>
                                             </span>
                                             <p>
-                                                Local da orientação: {projeto.cronogramaDeOrientacao.local} - {projeto.cronogramaDeOrientacao.tipo} <br />
-                                                Data: {projeto.cronogramaDeOrientacao.data} <br />
+                                                Dia da semana: {projeto.cronogramaDeOrientacao.dia} - {projeto.cronogramaDeOrientacao.tipo} <br />
+                                                Periodicidade: {projeto.cronogramaDeOrientacao.periodicidade} <br />
                                                 Horário: {projeto.cronogramaDeOrientacao.horas}  <br />
+                                                Local da orientação: {projeto.cronogramaDeOrientacao.local}
                                             </p>
                                         </li>
                                     ) : (

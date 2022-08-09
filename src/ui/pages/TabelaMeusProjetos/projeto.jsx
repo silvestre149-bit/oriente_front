@@ -14,8 +14,6 @@ export default function ProjetosProf() {
     const location = useLocation();
     const { meusprojetos } = location.state;
 
-    const atualizarComponente = (value) => setAtualizar(value);
-
     useEffect(() => {
         const buscarProjeto = async () => {
             const res = await pegarProjeto(meusprojetos._id);
@@ -105,7 +103,8 @@ export default function ProjetosProf() {
                                                 <b>Cronograma de orientação</b>
                                             </span>
                                             <p>
-                                                Data: {projeto.cronogramaDeOrientacao.data} -
+                                                Dia da semana: {projeto.cronogramaDeOrientacao.dia} - {projeto.cronogramaDeOrientacao.tipo} <br />
+                                                Periodicidade: {projeto.cronogramaDeOrientacao.periodicidade} <br />
                                                 Horário: {projeto.cronogramaDeOrientacao.horas}  <br />
                                                 Local da orientação: {projeto.cronogramaDeOrientacao.local}
                                             </p>

@@ -37,6 +37,15 @@ export async function buscarTodasNotificacoes() {
     }
 }
 
+export async function buscarConvitesDeAlunos(id) {
+    try {
+        const dados = await get('/notificacoes/alunos/pendentes/' + id);
+        return { ...dados };
+    } catch (erro) {
+        return { erro }
+    }
+}
+
 export async function buscarPedidoAberto(id) {
     try {
         const dados = await get('/notificacoes/pedido/aberto/' + id);

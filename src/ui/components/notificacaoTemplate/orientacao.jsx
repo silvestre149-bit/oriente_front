@@ -4,10 +4,10 @@ import { Collapsible, CollapsibleItem, Icon, Button, Modal } from 'react-materia
 import MessageTemplate from '../../components/errorMessageTemplate/index.jsx';
 import { Link, useHistory, useLocation } from 'react-router-dom';
 import { AuthContext } from '../../context/Auth';
-import { adicionarCronogramaOrientacao, removerOrientadorProjeto } from '../../../api/projeto';
+import { adicionarCronogramaOrientacao, buscarParticipacao, deletarParticipacao, deletarUmProjeto, pegarProjeto, removerOrientadorProjeto } from '../../../api/projeto';
 import { aceitarOrientacao } from '../../../api/professor';
-import { deletarConvite } from '../../../api/convites';
-import { inserirParticipacaoUsuario } from '../../../api/aluno.js';
+import { buscarConvitesDeAlunos, buscarNotificacoes, deletarConvite, deletarVariosConvites, enviarConvite } from '../../../api/convites';
+import { inserirParticipacaoUsuario, removerParticipacaoUsuario } from '../../../api/aluno.js';
 import { criarParticipacao } from '../../../api/cadastrar.js';
 import { pegarSemestreAberto } from '../../../api/semestre.js';
 import { useEffect } from 'react';
@@ -18,8 +18,7 @@ const dias = [
     "Quarta-feira",
     "Quinta-feira",
     "Sexta-feira",
-    "Sábado",
-    "Domingo"
+    "Sábado"
 ];
 
 export default function NotificacaoOrientacao({ remetente, titulo, projetoId, convite, atualizar }) {
@@ -28,6 +27,9 @@ export default function NotificacaoOrientacao({ remetente, titulo, projetoId, co
     const { usuario } = useContext(AuthContext);
     const [modalTrigger, setTrigger] = useState(false);
     const [semestre, setSemestre] = useState({});
+    const [existeConvites, setConvites] = useState([]);
+    const [participacoes, setParticipacoes] = useState([]);
+    const [projeto, setProjeto] = useState([]);
     const [feeedback, setFeedback] = useState({
         status: '',
         mensagem: ''
@@ -45,9 +47,25 @@ export default function NotificacaoOrientacao({ remetente, titulo, projetoId, co
         const pegarSemestre = async () => {
             const res = await pegarSemestreAberto();
             setSemestre(res.data);
-        }
+        };
 
+        const pegarConvitesAbertos = async () => {
+            const res = await buscarConvitesDeAlunos(projetoId);
+            setConvites(res.data);
+        };
+
+        const pegarParticipantes = async () => {
+            const res = await buscarParticipacao(projetoId);
+            setParticipacoes(res.data);
+        };
+
+        const buscarProjeto = async () => {
+            const res = await pegarProjeto(projetoId);
+            setProjeto(res.data);
+        }
         pegarSemestre();
+        pegarConvitesAbertos();
+        pegarParticipantes();
     }, [])
 
     const pegarValores = (e) => {
@@ -97,7 +115,23 @@ export default function NotificacaoOrientacao({ remetente, titulo, projetoId, co
         e.preventDefault();
 
         try {
-            if (usuario.permissoes.orientador) await removerOrientadorProjeto(projetoId);
+            if (usuario.permissoes.orientador) {
+                for (let i = 0; i < participacoes.length; i++) {
+                    let id = participacoes[i]._id;
+                    if (participacoes[i].tipo === 'aluno') await removerParticipacaoUsuario(participacoes[i].usuarioId, [id]);
+                    if (participacoes[i].tipo != 'aluno') await deletarParticipacao(id);
+                }
+                participacoes.map(async (participante) => {
+                    return await enviarConvite({
+                        remetenteNome: usuario.nome,
+                        destinatario: participante.usuarioId,
+                        tipo: "recusado",
+                        titulo: projeto.titulo
+                    })
+                })
+                await deletarUmProjeto(projetoId);
+                await deletarVariosConvites(projetoId);
+            };
             await deletarConvite(convite);
 
             return atualizar(true);
@@ -105,6 +139,9 @@ export default function NotificacaoOrientacao({ remetente, titulo, projetoId, co
             return console.log(e);
         }
     }
+
+    if(existeConvites.length > 0) return <div></div>
+
     return <>
         <Collapsible accordion>
             <CollapsibleItem

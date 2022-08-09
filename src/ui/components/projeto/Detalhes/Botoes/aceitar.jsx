@@ -5,8 +5,8 @@ import { aceitarAvaliacao, aceitarSuplente } from "../../../../../api/professor"
 import { criarParticipacao } from "../../../../../api/cadastrar";
 import { useContext } from "react";
 import { AuthContext } from "../../../../context/Auth";
-import { inserirParticipacaoUsuario, pegarParticipacao, removerParticipacaoUsuario } from "../../../../../api/aluno";
-import { atualizarProjeto, buscarParticipacao, deletarParticipacao, deletarUmProjeto, inserirParticipacaoProjeto } from "../../../../../api/projeto";
+import { inserirParticipacaoUsuario, removerParticipacaoUsuario } from "../../../../../api/aluno";
+import { buscarParticipacao, deletarParticipacao, deletarUmProjeto, inserirParticipacaoProjeto } from "../../../../../api/projeto";
 import { useEffect, useState } from "react";
 
 export default function AceitarConvite({ projeto, tipo, convite, atualizar }) {

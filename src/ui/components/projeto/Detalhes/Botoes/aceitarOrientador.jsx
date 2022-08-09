@@ -15,8 +15,7 @@ const dias = [
     "Quarta-feira",
     "Quinta-feira",
     "Sexta-feira",
-    "Sábado",
-    "Domingo"
+    "Sábado"
 ];
 
 export default function AceitarConviteOrientador({ projeto, convite }) {

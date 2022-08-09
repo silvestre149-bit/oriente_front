@@ -86,9 +86,7 @@ function MemoTabela({
         /* history.push(linkAlterar + '/' + row.original.id) */
     }, [history, nomeRecurso])
 
-    console.log(pageIndex);
     return <>
-
         <Mensagem
             descricao="Atenção! Clique na coluna para ordenar as linhas"
             fechar

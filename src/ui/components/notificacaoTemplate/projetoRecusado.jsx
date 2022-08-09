@@ -13,7 +13,6 @@ export default function NotificacaoProjetoRecusado({ remetente, titulo, atualiza
         }
     };
 
-    console.log(atualizar);
     return <>
         <Collapsible accordion>
             <CollapsibleItem
@@ -21,14 +20,14 @@ export default function NotificacaoProjetoRecusado({ remetente, titulo, atualiza
                 header={`O professor ${remetente} recusou seu pedido para orientar o projeto ${titulo}`}
                 icon={<Icon>sentiment_very_dissatisfied</Icon>}
                 node="div">
-                    Convite outro professor para orientar o projeto!
+                    <h4>Cadastre um novo projeto!</h4>
                 <div className="row">
                     <div className="col s2">
                         <Button style={{
                             marginRight: '5px',
                             backgroundColor: 'red',
                         }}
-                        onClick={(e) => {marcarComoLido()}}>Excluir</Button>
+                        onClick={(e) => {marcarComoLido()}}>Lido</Button>
                     </div>
                 </div>
             </CollapsibleItem>
