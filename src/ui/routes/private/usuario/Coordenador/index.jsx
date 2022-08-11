@@ -7,7 +7,7 @@ import { SemestreProfCoordenador } from "../../../../pages/usuario/profCoordenad
 import { CompHomeCoordenador } from "../../../../pages/usuario/profCoordenador/Home";
 
 import Projeto from "../../../../pages/TabelaDeProjetos/projeto";
-import OutroProjeto from '../../../../pages/Projeto/projeto';
+import ProjetoControle from "../../../../pages/Projeto/projeto.jsx";
 /** @type { import("react-router-dom").RouteProps[] } */
 export const ROTAS_COORDENADOR = [
     {
@@ -20,7 +20,7 @@ export const ROTAS_COORDENADOR = [
     },
     {
         path: '/controle/adm',
-        component: OutroProjeto
+        component: ProjetoControle
     },
     {
         path: '/aluno',

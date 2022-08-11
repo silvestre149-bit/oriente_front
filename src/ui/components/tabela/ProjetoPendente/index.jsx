@@ -1,17 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { BreadcrumbsControle } from '../../Breadcrumbs/ControleBC';
-import axios from 'axios';
+import { buscarTodasNotificacoes } from '../../../../api/convites';
+import NotificacaoOrientacaoControle from '../../notificacaoTemplate/cancelarOrientacao';
 
 function TabelaProjetoPendente() {
-  // const [notificacoes, setNotificacoes] = useState([]);
-  // const id = "";
+  const [notificacoes, setNotificacoes] = useState([]);
+  const [atualizando, setAtualizando] = useState(false);
 
-  // useEffect(() => {
-  //   axios.get('http://localhost:3031/notificacoes/' + id)
-  //     .then(res => setNotificacoes(res.data))
-  //     .then(console.log(200))
-  // })
+  const atualizarPagina = () => setAtualizando(!atualizando)
 
+  useEffect(() => {
+    const pegarNotificacoes = async () => {
+      const res = await buscarTodasNotificacoes();
+      setNotificacoes(res.data);
+    }
+
+    pegarNotificacoes();
+  }, [atualizando])
 
   return <>
     <BreadcrumbsControle/>
@@ -20,7 +25,19 @@ function TabelaProjetoPendente() {
       <section className="white">
         <div className="card">
           <div className="card">
-            <div className="card-content">
+            <div className="card-content">{
+              notificacoes.filter((notificacao) => {
+                return notificacao.tipo === 'orientacao';
+              }).map((notificacao) => {
+                return <NotificacaoOrientacaoControle 
+                convite={notificacao._id} 
+                projetoId={notificacao.projetoId}
+                remetente={notificacao.remetenteNome}
+                titulo={notificacao.titulo}
+                atualizar={atualizarPagina}
+                 />
+              }
+            )}
             </div>
           </div>
         </div>
