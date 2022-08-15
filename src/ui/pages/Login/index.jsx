@@ -1,9 +1,7 @@
 import React, { useEffect, useState, useContext } from 'react';
 import './styles.css'
 import loginLogo from '../../assets/img/loginLogo.png'
-import { FormLogin } from '../../components/form/Login';
-import { Mensagem } from '../../components/Mensagem/index.jsx';
-import { pegarSemestre, pegarSemestreAberto } from '../../../api/semestre';
+import { pegarSemestreAberto } from '../../../api/semestre';
 
 /* estilos e icones */
 import './styles.css'
@@ -18,7 +16,7 @@ import { AuthContext } from '../../context/Auth/index.jsx';
 
 /* tipos */
 import { COOKIE_TYPES, ERRO_TYPES, LOGIN_TYPES } from '../../../utils/types';
-import { criarCookie, limparCookies } from '../../../utils/cookie';
+import { criarCookie } from '../../../utils/cookie';
 import { Carregando } from '../../components/Carregando';
 
 export function Login() {

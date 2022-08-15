@@ -3,7 +3,6 @@ import { HomeProfessor } from "../../../../pages/usuario/professor/Home";
 import { ProjetosProfessor } from "../../../../pages/usuario/professor/MeusProjetos";
 import { NotificacaoProfessor } from "../../../../pages/usuario/profCoordenador/Notificacao";
 import ProjetosProf from "../../../../pages/TabelaMeusProjetos/projeto";
-import { ModalOrientadorAceitaConvite } from "../../../../components/novos-modais/ConviteModal/AceitarConvite";
 import { ProjetoDetalhes } from "../../../../components/projeto/Detalhes";
 
 /** @type { import("react-router-dom").RouteProps[] } */

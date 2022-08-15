@@ -42,13 +42,6 @@ export function ModalTemplate({
     const decode = jwt(getToken);
     const history = useHistory();
 
-    const reload = () => {
-        setTimeout(() => {
-            window.location.reload(true);
-        }, 3000);
-    }
-    const novaArray = [];
-
     const pegarDadosSessao = (e, form) => {
         const { name, value } = e.target;
 
@@ -77,29 +70,6 @@ export function ModalTemplate({
         buscarSemestre();
 
     }, [])
-
-    const verificarSemestre = dadosColunas.filter((semestre) => {
-        return semestre.status === 'aberto';
-    }).map((semestre) => {
-        return semestre.status;
-    })
-
-    const editarSessao = async (e) => {
-
-    }
-
-    const deletarSemestre = async () => {
-        if (semestre === false) {
-            setStatus('falha');
-            setDescricao("Não foi possível deletar o semestre, aguarde e tente novamente!");
-            reload();
-        }
-
-        setStatus('sucesso');
-        setDescricao("Semestre deletado com sucesso, aguarde!");
-        await deletarSemestre(semestre);
-        reload();
-    }
 
     const listaSemestre = dadosColunas.filter((semestre) => {
         return semestre.status === 'aberto'
@@ -130,122 +100,6 @@ export function ModalTemplate({
     }
 
     return <>
-        {
-            /* Adicionar Sessao */
-            tipoModal === "adicionar" && tipoPagina === "sessao" && < div >
-                <br />
-                <div style={{ marginBottom: '15px' }}>
-                    <div className="row">
-                        <div className="col s12">
-                            <a href="#adicionarSessao" className="btn red accent-4 modal-trigger">
-                                <Add style={{
-                                    verticalAlign: "middle", marginRight: "0.5em"
-                                }} />Adicionar Sessão
-                            </a>
-                        </div>
-                    </div>
-
-                    <div id="adicionarSessao" className="modal">
-                        <div className="modal-content">
-                            <a href="#!" className="modal-close btn-flat" style={{ float: "right" }}><Close className="grey-text" style={{ width: '100%', height: '100%' }} /></a>
-                            <div className="container">
-                                <h4 style={{ marginTop: '1em', fontSize: '1.8em' }}><b>Adicionar sessão</b></h4>
-                                <form className="col s12" onSubmit={editarSessao}>
-                                    <div className="row">
-                                        <div className="input-field col s12">
-                                            <input id="name" type="text" value={sessao.data} onChange={e => pegarDadosSessao(e.target.value, sessao)} />
-                                            <label for="name">Data da sessão</label>
-                                        </div>
-                                    </div>
-                                    <div className="row">
-                                        <div className="input-field col s12">
-                                            <input id="name" type="text" value={sessao.quantidade} onChange={e => pegarDadosSessao(e.target.value, sessao)} />
-                                            <label for="name">Quantidade de pôsteres</label>
-                                        </div>
-                                    </div>
-                                    <div className="row">
-                                        <div className="input-field col s12">
-                                            <input id="name" type="text" value={sessao.apresentacao} onChange={(e) => pegarDadosSessao(e.target.value, sessao)} />
-                                            <label for="name">Local da Apresentação</label>
-                                        </div>
-                                    </div>
-
-                                    <MessageTemplate type={status} mensagem={descricao} />
-                                    <button type="submit" id="addProf" className="btn red accent-4 center">Salvar alterações</button>
-                                </form>
-                            </div>
-                        </div>
-                        <div className="modal-footer" style={{
-                            display: "flex", justifyContent: "center", marginBottom: "1.5em"
-                        }}>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        }
-
-        {
-            /* Editar Sessao */
-            tipoModal === "editar" && tipoPagina === "sessao" && < div >
-                <br />
-                <div style={{ marginBottom: '15px' }}>
-                    <div className="row">
-                        <div className="col s12">
-                            <a href="#editarSessao" className="btn red accent-4 modal-trigger">
-                                Editar Sessão
-                            </a>
-                        </div>
-                    </div>
-
-                    <div id="editarSessao" className="modal">
-                        <div className="modal-content">
-                            <a href="#!" className="modal-close btn-flat" style={{ float: "right" }}><Close className="grey-text" style={{ width: '100%', height: '100%' }} /></a>
-                            <div className="container">
-                                <h4 style={{ marginTop: '1em', fontSize: '1.8em' }}><b>Editar sessão</b></h4>
-                                <div class="row">
-                                    <label>Selecione a sessão a ser editada.</label>
-                                    <div className="custom-select">
-                                        <select value={selects} onChange={e => setSelects(e.target.value)} class="browser-default select-options ">
-                                            <option value="1">Sessão 1</option>
-                                            <option value="2">Sessão 2</option>
-                                        </select>
-                                        <span className="custom-arrow"></span>
-                                    </div>
-                                </div>
-                                <form className="col s12" onSubmit={editarSessao}>
-                                    <div className="row">
-                                        <div className="input-field col s12">
-                                            <input id="name" type="text" value={sessao.data} onChange={e => pegarDadosSessao(e.target.value, sessao)} />
-                                            <label for="name">Data da sessão</label>
-                                        </div>
-                                    </div>
-                                    <div className="row">
-                                        <div className="input-field col s12">
-                                            <input id="name" type="text" value={sessao.quantidade} onChange={e => pegarDadosSessao(e.target.value, sessao)} />
-                                            <label for="name">Quantidade de pôsteres</label>
-                                        </div>
-                                    </div>
-                                    <div className="row">
-                                        <div className="input-field col s12">
-                                            <input id="name" type="text" value={sessao.apresentacao} onChange={e => pegarDadosSessao(e.target.value, sessao)} />
-                                            <label for="name">Local da Apresentação</label>
-                                        </div>
-                                    </div>
-
-                                    <MessageTemplate type={status} mensagem={descricao} />
-                                    <button type="submit" id="addProf" className="btn red accent-4 center">Salvar alterações</button>
-                                </form>
-                            </div>
-                        </div>
-                        <div className="modal-footer" style={{
-                            display: "flex", justifyContent: "center", marginBottom: "1.5em"
-                        }}>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        }
-
         {
             /* Aceitar Projeto Para Sessão */
             tipoModal === "aceitar" && tipoPagina === "tcc" && < div >

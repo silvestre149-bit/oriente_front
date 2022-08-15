@@ -1,8 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { TabelaRelatorioTres } from './tabela';
-import { DADOS } from './colunas';
-import axios from 'axios';
-import { Carregando } from '../../Carregando';
 import { pegarTodosAlunos } from '../../../../api/aluno';
 
 // import { Container } from './styles';

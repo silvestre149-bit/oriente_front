@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useMemo } from 'react';
+import React, { useContext, useMemo } from 'react';
 import { Route, Switch } from 'react-router-dom';
 
 /* context */
@@ -15,8 +15,6 @@ import { LOGIN_TYPES, PERFIL_TYPES, ERRO_TYPES } from '../../../utils/types';
 /* paginas */
 import { NaoEncontrada } from '../../pages/NaoEncontrada';
 import { Login } from '../../pages/Login';
-
-import { useLocation } from 'react-router-dom';
 
 /* componentes */
 import { RotaRestrita } from '../../components/auth/RotaRestrita';
@@ -39,9 +37,6 @@ export function Logout() {
 export function PrivateRoutes() {
 
   const { usuario, dispatch } = useContext(AuthContext);
-
-  let location = useLocation();
-  let state = location.state;
 
   const rotasUsuario = useMemo(() => {
 

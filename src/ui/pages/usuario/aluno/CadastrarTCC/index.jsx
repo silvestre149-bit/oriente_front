@@ -208,8 +208,8 @@ export default function CadastrarTCC({ atualizar }) {
                                         {alunos.sort((a, b) => {
                                             return a.nome.localeCompare(b.nome);
                                         }).filter((aluno) => {
-                                            if (!usuario.turmas.turmaUm) return aluno.turmas.turmaDois && aluno.participacoes.length <= 0 && aluno._id != usuario._id;
-                                            if (!usuario.turmas.turmaDois) return aluno.turmas.turmaUm && aluno.participacoes.length <= 0 && aluno._id != usuario._id;
+                                            if (!usuario.turmas.turmaUm) return aluno.turmas.turmaDois && aluno.participacoes.length <= 0 && aluno._id !== usuario._id;
+                                            if (!usuario.turmas.turmaDois) return aluno.turmas.turmaUm && aluno.participacoes.length <= 0 && aluno._id !== usuario._id;
                                         }).map((aluno, index) => {
                                             return <option key={index} value={aluno._id}>{aluno.nome}</option>;
                                         })}
@@ -219,7 +219,7 @@ export default function CadastrarTCC({ atualizar }) {
                                         {alunos.sort((a, b) => {
                                             return a.nome.localeCompare(b.nome);
                                         }).filter((aluno) => {
-                                            return aluno.participacoes.length <= 0 && aluno._id != usuario._id
+                                            return aluno.participacoes.length <= 0 && aluno._id !== usuario._id
                                         }).map((aluno, index) => {
                                             return <option key={index} value={aluno._id} >{aluno.nome}</option>;
                                         })}
@@ -229,7 +229,7 @@ export default function CadastrarTCC({ atualizar }) {
                                         {alunos.sort((a, b) => {
                                             return a.nome.localeCompare(b.nome);
                                         }).filter((aluno) => {
-                                            return aluno.participacoes.length <= 0 && aluno._id != usuario._id
+                                            return aluno.participacoes.length <= 0 && aluno._id !== usuario._id
                                         }).map((aluno, index) => {
                                             return <option key={index} value={aluno._id}>{aluno.nome}</option>;
                                         })}

@@ -1,7 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { isValidElement } from 'react';
-import { buscarCoordenadores } from '../../../../../api/aluno';
-import { buscarPedidoAberto, enviarConvite, enviarConvitesAosParticipantes } from '../../../../../api/convites';
+import { buscarPedidoAberto, enviarConvite } from '../../../../../api/convites';
 import { buscarProjetoDoAluno, buscarStatusDoOrientador } from '../../../../../api/projeto';
 import { Carregando } from '../../../../components/Carregando';
 import { ModalExcluirProjeto } from '../../../../components/novos-modais/AlunoModal/DelProjeto';

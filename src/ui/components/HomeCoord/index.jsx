@@ -3,9 +3,9 @@ import { Link } from 'react-router-dom';
 import { ModalEncerrarSemestre } from '../novos-modais/SemestreModal/modalEncerrar';
 import { DADOS } from '../tabela/Sessao/colunas';
 import { atualizarSemestre, pegarSemestreAberto } from '../../../api/semestre.js';
-import { ModalEditarSessao } from '../novos-modais/SemestreModal/modalEditarSessao';
-import { ModalAdicionarSessao } from '../novos-modais/SemestreModal/modalAdicionarSessao';
 import { Carregando } from '../Carregando';
+import ModalAdicionarSessao from '../novos-modais/SessaoModal/ModalAdicionarSessao';
+import ModalEditarSessao from '../novos-modais/SessaoModal/ModalEditarSessao';
 
 function HomeCoordenador() {
     const [semestre, setSemestre] = useState([]);

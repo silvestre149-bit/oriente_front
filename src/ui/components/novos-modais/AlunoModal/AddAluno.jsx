@@ -3,7 +3,7 @@ import { MdAddBox as Add, MdClose as Close } from "react-icons/md";
 import { cadastrarAluno } from '../../../../api/aluno.js';
 import M from 'materialize-css';
 import './index.css'
-import { pegarSemestre } from "../../../../api/semestre.js";
+import { pegarSemestreAberto } from "../../../../api/semestre.js";
 import MessageTemplate from "../../errorMessageTemplate/index.jsx";
 import { buscarCod } from "../../../../api/professor.js";
 
@@ -11,6 +11,7 @@ const form = {
     nome: String,
     cod: String,
     turmas: Array,
+    semestre: String,
     tipo: "aluno",
     senha: String
 };
@@ -37,9 +38,10 @@ function AdicionarAluno({ atualizar }) {
 
     useEffect(() => {
         const buscarSemestre = async () => {
-            const res = await pegarSemestre();
+            const res = await pegarSemestreAberto();
             setOptions(res.data);
-        }
+            setValores({ ...formValores, semestre: res.data[0]._id });
+        };
 
         buscarSemestre();
     }, []);
