@@ -21,6 +21,7 @@ const dias = [
 export default function AceitarConviteOrientador({ projeto, convite }) {
     const { usuario } = useContext(AuthContext);
     const history = useHistory();
+    const [isDesabilitado, setDesabilitado] = useState(false);
     const [feeedback, setFeedback] = useState({
         status: '',
         mensagem: ''
@@ -49,7 +50,12 @@ export default function AceitarConviteOrientador({ projeto, convite }) {
             });
         }
 
+        setDesabilitado(true);
         try {
+            setFeedback({
+                status: 'sucesso',
+                descricao: 'Adicionando orientação, aguarde, por favor.'
+            });
             const participacao = await criarParticipacao({
                 nome: usuario.nome,
                 cod: usuario.cod,
@@ -69,7 +75,7 @@ export default function AceitarConviteOrientador({ projeto, convite }) {
             return history.push('/notificacoes');
         } catch (e) {
             console.log(e);
-
+            setDesabilitado(false);
             return setFeedback({
                 status: 'falha',
                 descricao: 'Erro ao adicionar orientação'
@@ -155,7 +161,7 @@ export default function AceitarConviteOrientador({ projeto, convite }) {
                     <div className="modal-footer" style={{
                         display: "flex", justifyContent: "right", marginBottom: "1.5em", paddingRight: "3rem"
                     }}>
-                        <button type="submit" id="aceitar" className=" btn red accent-4" style={{ marginRight: '1rem' }}>Confirmar</button>
+                        <button type="submit" id="aceitar" disabled={isDesabilitado} className=" btn red accent-4" style={{ marginRight: '1rem' }}>Confirmar</button>
                         <button type="button" id="naoAceitar" className="modal-close btn grey">Não confirmar</button>
                     </div>
                 </div>

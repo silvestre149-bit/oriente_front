@@ -31,6 +31,7 @@ function EditarAluno({ atualizar }) {
     const [alunos, setAlunos] = useState([]);
     const [alunoSelecionado, setAlunoSelecionado] = useState([]);
     const [alunoID, setAluno] = useState();
+    const [isDesabilitado, setDesabilitado] = useState(false);
 
     useEffect(() => {
         var elemsModalAluno = document.querySelectorAll(".modal");
@@ -112,6 +113,7 @@ function EditarAluno({ atualizar }) {
                 descricao: "O TIA inserido já está sendo utilizado!"
             });
 
+        setDesabilitado(true);
         try {
             await atualizarAluno(alunoID, formValores);
             setFeedback({
@@ -120,6 +122,7 @@ function EditarAluno({ atualizar }) {
             });
             atualizar(1);
         } catch (e) {
+            isDesabilitado(false);
             setFeedback({
                 status: "falha",
                 descricao: "Erro no sistema, tente mais tarde!"
@@ -229,7 +232,7 @@ function EditarAluno({ atualizar }) {
                             display: "flex", justifyContent: "center", marginBottom: "1.5em"
                         }}>
                             <form onSubmit={editarAluno}>
-                                <button type="submit" id="addAluno" className="btn red accent-4">Salvar alterações</button>
+                                <button disabled={isDesabilitado} type="submit" id="addAluno" className="btn red accent-4">Salvar alterações</button>
                             </form>
                         </div>
                     </div>

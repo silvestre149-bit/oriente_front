@@ -14,6 +14,7 @@ export function ModalEncerrarSemestre({ atualizar }) {
         descricao: ""
     });
     const [semestre, setSemestre] = useState();
+    const [isDesabilitado, setDesabilitado] = useState(false);
 
     useEffect(() => {
         const buscarSemestre = async () => {
@@ -27,15 +28,24 @@ export function ModalEncerrarSemestre({ atualizar }) {
     const cancelarSemestre = async (e) => {
         e.preventDefault();
 
-        await deletarAlunos(semestre[0]._id);
-        await deletarProjetos(semestre[0]._id);
-        await fecharSemestre(semestre[0]._id);
-        atualizar(1);
+        setDesabilitado(true);
+        try {
+            await deletarAlunos(semestre[0]._id);
+            await deletarProjetos(semestre[0]._id);
+            await fecharSemestre(semestre[0]._id);
+            atualizar(1);
 
-        return setFeedback({
-            status: "sucesso",
-            descricao: "Semestre encerrado com sucesso!"
-        });
+            return setFeedback({
+                status: "sucesso",
+                descricao: "Semestre encerrado com sucesso!"
+            });
+        } catch (error) {
+            setDesabilitado(false);
+            return setFeedback({
+                status: "falha",
+                descricao: "Erro ao encerrar o semestre"
+            });
+        }
     };
 
     return <>
@@ -60,7 +70,7 @@ export function ModalEncerrarSemestre({ atualizar }) {
                     }}>
                         <MessageTemplate mensagem={feedback} />
                         <form onSubmit={cancelarSemestre}>
-                            <button type="submit" id="encerrar" className="modal-close btn red accent-4" style={{ marginRight: '1rem' }}>Encerrar</button>
+                            <button disabled={isDesabilitado} type="submit" id="encerrar" className="modal-close btn red accent-4" style={{ marginRight: '1rem' }}>Encerrar</button>
                             <button type="button" id="naoEncerrar" className="modal-close btn grey">Não encerrar</button>
                         </form>
                     </div>

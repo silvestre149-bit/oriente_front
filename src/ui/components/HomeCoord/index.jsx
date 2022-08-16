@@ -16,6 +16,7 @@ function HomeCoordenador() {
     });
     const [carregando, setCarregando] = useState(true);
     const [dado, setNovosDados] = useState(false);
+    const [isDesabilitado, setDesabilitado] = useState(false);
     const atualizarPagina = () => setNovosDados(!dado);
 
     useEffect(() => {
@@ -37,11 +38,17 @@ function HomeCoordenador() {
 
     async function atualizarInformacoes(e) {
         e.preventDefault();
-        await atualizarSemestre(semestre[0]._id, {
-            permissoes: permissoes
-        });
-
-        return atualizarPagina();
+        setDesabilitado(true);
+        try {
+            await atualizarSemestre(semestre[0]._id, {
+                permissoes: permissoes
+            });
+    
+            return atualizarPagina();
+        } catch (error) {
+            console.log(error);
+            return setDesabilitado(false);
+        }
     };
 
     if (carregando) return <Carregando />;
@@ -233,7 +240,7 @@ function HomeCoordenador() {
                             </div>
                             <div className='right-align col s8'>
                                 <form onSubmit={atualizarInformacoes}>
-                                    <button type="submit" className="btn red accent-4" style={{ marginRight: '1rem' }}>Salvar alterações</button>
+                                    <button disabled={isDesabilitado} type="submit" className="btn red accent-4" style={{ marginRight: '1rem' }}>Salvar alterações</button>
                                 </form>
                             </div>
                         </div>

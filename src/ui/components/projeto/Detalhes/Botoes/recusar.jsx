@@ -11,6 +11,7 @@ export default function RecusarConvite({ projeto, tipo, convite }) {
     const history = useHistory();
     const [participacoes, setParticipacao] = useState([]);
     const [dadosProjeto, setProjeto] = useState([]);
+    const [isDesabilitado, setDesabilitado] = useState(false);
     const { usuario } = useContext(AuthContext);
 
     useEffect(() => {
@@ -31,6 +32,7 @@ export default function RecusarConvite({ projeto, tipo, convite }) {
     const recusarConvite = async (e) => {
         e.preventDefault();
 
+        setDesabilitado(true);
         try {
             if (tipo === 'orientador') {
                 for (let i = 0; i < participacoes.length; i++) {
@@ -55,13 +57,15 @@ export default function RecusarConvite({ projeto, tipo, convite }) {
 
             return history.push('/notificacoes');
         } catch (e) {
+            setDesabilitado(false);
             return console.log(e);
         }
     }
 
-    console.log(dadosProjeto);
     return <>
-        <Button style={{
+        <Button
+        disabled={isDesabilitado} 
+        style={{
             backgroundColor: 'red',
         }}
             onClick={(e) => { recusarConvite(e) }}>Recusar</Button>

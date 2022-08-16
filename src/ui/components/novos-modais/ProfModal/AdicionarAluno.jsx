@@ -16,6 +16,7 @@ export function ModalAdicionarAlunoProjeto({ atualizar, dadosProjeto }) {
     const [semestre, setSemestre] = useState();
     const [aluno, setAluno] = useState("");
     const [dadosAluno, setDadosAluno] = useState();
+    const [isDesabilitado, setDesabilitado] = useState(false);
 
     useEffect(() => {
         var elemsModalCadastroTCC = document.querySelectorAll(".modal");
@@ -51,6 +52,7 @@ export function ModalAdicionarAlunoProjeto({ atualizar, dadosProjeto }) {
             descricao: "Selecione um aluno"
         });
 
+        setDesabilitado(true);
         try {
             const participacao = await criarParticipacao({
                 usuarioId: dadosAluno._id,
@@ -69,6 +71,7 @@ export function ModalAdicionarAlunoProjeto({ atualizar, dadosProjeto }) {
             });
         } catch (e) {
             console.log(e);
+            setDesabilitado(false);
             return setFeedback({
                 status: "falha",
                 descricao: "Erro ao adicionar aluno, tente mais tarde!"
@@ -117,7 +120,7 @@ export function ModalAdicionarAlunoProjeto({ atualizar, dadosProjeto }) {
                                 <div className="modal-footer" style={{
                                     display: "flex", justifyContent: "center", marginBottom: "1.5em"
                                 }}>
-                                    <button type="submit" id="addAluno" className="btn red accent-4">Adicionar aluno</button>
+                                    <button disabled={isDesabilitado} type="submit" id="addAluno" className="btn red accent-4">Adicionar aluno</button>
                                 </div>
                             </form>
                         </div>

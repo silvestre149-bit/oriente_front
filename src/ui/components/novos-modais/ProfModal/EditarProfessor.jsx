@@ -25,6 +25,7 @@ export default function EditarProfessor({ atualizar }) {
     const [data, setData] = useState();
     const [carregado, setCarregado] = useState(false);
     const [carrega, setCarrega] = useState(null);
+    const [isDesabilitado, setDesabilitado] = useState(false);
 
     useEffect(() => {
         const pegarProfessores = async () => {
@@ -92,6 +93,7 @@ export default function EditarProfessor({ atualizar }) {
                 descricao: "Erro, o DRT inserido já está sendo utilizado, tente novamente!"
             });
 
+        setDesabilitado(true);
         try {
             await editarProfessor(professor, formValores);
             setFeedback({
@@ -101,6 +103,7 @@ export default function EditarProfessor({ atualizar }) {
             atualizar(1);
 
         } catch (e) {
+            setDesabilitado(false);
             setFeedback({
                 stauts: "falha",
                 descricao: "Erro no sistema, tente mais tarde."
@@ -271,7 +274,7 @@ export default function EditarProfessor({ atualizar }) {
                             <div className="modal-footer" style={{
                                 display: "flex", justifyContent: "center", marginBottom: "1.5em"
                             }}>
-                                <button type="submit" id="addProf" className="btn red accent-4">Salvar alterações</button>
+                                <button disabled={isDesabilitado} type="submit" id="addProf" className="btn red accent-4">Salvar alterações</button>
                             </div>
                         </form>
                     </div>

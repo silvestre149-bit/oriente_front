@@ -30,6 +30,7 @@ export default function NotificacaoOrientacao({ remetente, titulo, projetoId, co
     const [existeConvites, setConvites] = useState([]);
     const [participacoes, setParticipacoes] = useState([]);
     const [projeto, setProjeto] = useState([]);
+    const [isDesabilitado, setDesabilitado] = useState(false);
     const [feeedback, setFeedback] = useState({
         status: '',
         mensagem: ''
@@ -82,6 +83,7 @@ export default function NotificacaoOrientacao({ remetente, titulo, projetoId, co
             });
         }
 
+        setDesabilitado(true);
         try {
             const participacao = await criarParticipacao({
                 nome: usuario.nome,
@@ -103,6 +105,7 @@ export default function NotificacaoOrientacao({ remetente, titulo, projetoId, co
             return atualizar(true);
         } catch (e) {
             console.log(e);
+            setDesabilitado(false);
 
             return setFeedback({
                 status: 'falha',
@@ -140,7 +143,7 @@ export default function NotificacaoOrientacao({ remetente, titulo, projetoId, co
         }
     }
 
-    if(existeConvites.length > 0) return <div></div>
+    if (existeConvites.length > 0) return <div></div>
 
     return <>
         <Collapsible accordion>
@@ -244,6 +247,7 @@ export default function NotificacaoOrientacao({ remetente, titulo, projetoId, co
                     </div>
                     <div className="col s1" />
                     <Button
+                        disabled={isDesabilitado}
                         onClick={() => { history.push('/informacoes/projeto', { projeto: projetoId, tipo: 'orientador', convite: convite, remetente: remetente }) }}
                         node="button"
                         style={{

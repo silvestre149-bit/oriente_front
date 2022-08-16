@@ -23,7 +23,8 @@ function AdicionarAluno({ atualizar }) {
     });
     const [formValores, setValores] = useState(form);
     const [selects, setSelects] = useState();
-    const [options, setOptions] = useState([]);
+    const [semestres, setSemestres] = useState([]);
+    const [isDesabilitado, setDesabilitado] = useState(false);
 
     useEffect(() => {
         var elemsModalAluno = document.querySelectorAll(".modal");
@@ -39,7 +40,7 @@ function AdicionarAluno({ atualizar }) {
     useEffect(() => {
         const buscarSemestre = async () => {
             const res = await pegarSemestreAberto();
-            setOptions(res.data);
+            setSemestres(res.data);
             setValores({ ...formValores, semestre: res.data[0]._id });
         };
 
@@ -61,9 +62,7 @@ function AdicionarAluno({ atualizar }) {
         });
     };
 
-    const semestresAtivos = options.filter((semestre) => {
-        return semestre.status === "aberto"
-    }).map((semestre) => {
+    const semestresAtivos = semestres.map((semestre) => {
         return semestre.turmas;
     });
 
@@ -78,6 +77,7 @@ function AdicionarAluno({ atualizar }) {
                 descricao: "Erro, o TIA inserido já está sendo utilizado, tente novamente!"
             });
 
+        setDesabilitado(true);
         try {
             await cadastrarAluno(formValores);
             setFeedback({
@@ -87,6 +87,7 @@ function AdicionarAluno({ atualizar }) {
             atualizar(1);
         } catch (e) {
             console.log(e);
+            setDesabilitado(false);
 
             return setFeedback({
                 status: "falha",
@@ -193,7 +194,7 @@ function AdicionarAluno({ atualizar }) {
                         <div className="modal-footer" style={{
                             display: "flex", justifyContent: "center", marginBottom: "1.5em"
                         }}>
-                            <button type="submit" id="addAluno" className="btn red accent-4">adicionar aluno</button>
+                            <button disabled={isDesabilitado} type="submit" id="addAluno" className="btn red accent-4">adicionar aluno</button>
                         </div>
                     </form>
                 </div>

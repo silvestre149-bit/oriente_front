@@ -13,6 +13,7 @@ export default function AceitarConvite({ projeto, tipo, convite, atualizar }) {
     const { usuario } = useContext(AuthContext);
     const history = useHistory();
     const [participacoes, setParticipacao] = useState([]);
+    const [isDesabilitado, setDesabilitado] = useState(false);
 
     useEffect(() => {
         const pegarParticipacao = async () => {
@@ -26,6 +27,7 @@ export default function AceitarConvite({ projeto, tipo, convite, atualizar }) {
     const enviarFormulario = async (e) => {
         e.preventDefault();
 
+        setDesabilitado(true);
         try {
             if (tipo === 'avaliador') {
                 const participacao = await criarParticipacao({
@@ -84,12 +86,15 @@ export default function AceitarConvite({ projeto, tipo, convite, atualizar }) {
 
             return history.push('/notificacoes');
         } catch (e) {
+            setDesabilitado(false);
             return console.log(e);
         }
     }
 
     return <>
-        <Button style={{
+        <Button
+        disabled={isDesabilitado} 
+        style={{
             backgroundColor: 'red',
         }}
             onClick={(e) => { enviarFormulario(e) }}>Aceitar</Button>

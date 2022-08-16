@@ -10,23 +10,25 @@ import { pegarSemestreAberto } from '../../../api/semestre.js';
 import { useEffect } from 'react';
 import { inserirParticipacaoProjeto } from '../../../api/projeto';
 
-export default function NotificacaoOrientacao({ remetente, titulo, projetoId, convite, atualizar }) {
+export default function NotificacaoParticipacao({ remetente, titulo, projetoId, convite, atualizar }) {
     const history = useHistory();
     const { usuario } = useContext(AuthContext);
     const [semestre, setSemestre] = useState({});
+    const [isDesabilitado, setDesabilitado] = useState(false);
 
     useEffect(() => {
         const pegarSemestre = async () => {
             const res = await pegarSemestreAberto();
             setSemestre(res.data);
         }
-        
+
         pegarSemestre();
     }, [])
 
     const aceitarParticipacao = async (e) => {
         e.preventDefault();
 
+        setDesabilitado(true);
         try {
             const participacao = await criarParticipacao({
                 nome: usuario.nome,
@@ -43,6 +45,7 @@ export default function NotificacaoOrientacao({ remetente, titulo, projetoId, co
 
             return atualizar();
         } catch (e) {
+            setDesabilitado(false);
             return console.log(e);
         }
     };
@@ -50,10 +53,12 @@ export default function NotificacaoOrientacao({ remetente, titulo, projetoId, co
     const recusarConvite = async (e) => {
         e.preventDefault();
 
+        setDesabilitado(true);
         try {
             await deletarConvite(convite);
             return atualizar();
         } catch (e) {
+            setDesabilitado(false);
             return console.log(e);
         }
     }
@@ -67,19 +72,23 @@ export default function NotificacaoOrientacao({ remetente, titulo, projetoId, co
                 node="div">
                 <div className="row">
                     <div className="col s2">
-                        <a onClick={(e) => aceitarParticipacao(e)} className="btn red accent-4 modal-trigger">
-                            Aceitar
-                        </a>
-                    </div>
-                    <div className="col s2">
-                        <Button style={{
+                        <Button disabled={isDesabilitado} onClick={(e) => aceitarParticipacao(e)} style={{
                             marginRight: '5px',
                             backgroundColor: 'red',
-                        }}
+                        }} >Aceitar</Button>
+                    </div>
+                    <div className="col s2">
+                        <Button
+                            disabled={isDesabilitado}
+                            style={{
+                                marginRight: '5px',
+                                backgroundColor: 'red',
+                            }}
                             onClick={(e) => { recusarConvite(e) }}>Recusar</Button>
                     </div>
                     <div className="col s5" />
                     <Button
+                        className='right'
                         onClick={() => { history.push('/informacoes/projeto', { projeto: projetoId, tipo: 'aluno', convite: convite }) }}
                         node="button"
                         style={{

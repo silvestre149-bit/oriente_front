@@ -5,7 +5,6 @@ import { useHistory } from 'react-router-dom';
 import { deletarConvite } from '../../../api/convites';
 import { aceitarAvaliacao } from '../../../api/professor';
 import { removerAvaliadorProjeto, removerParticipacaoProjeto } from '../../../api/projeto';
-import { pegarSemestreAberto } from '../../../api/semestre';
 import { AuthContext } from '../../context/Auth';
 
 
