@@ -177,7 +177,7 @@ function EditarAluno({ atualizar }) {
                             <div className="custom-select">
                                 <select value={alunoID} onChange={e => { pegarDadosUsuario(e.target.value); setAluno(e.target.value) }} class="browser-default select-options ">
                                     <option disabled selected>Selecione um aluno</option>
-                                    {listaAlunos.sort().map((aluno, index) => {
+                                    {listaAlunos.sort((a, b) => a.nome.localeCompare(b.nome)).map((aluno, index) => {
                                         return <option key={index} value={aluno.id}>{aluno.nome}</option>
                                     })}
                                 </select>

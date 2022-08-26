@@ -5,6 +5,7 @@ import { Icon } from 'react-materialize';
 import { AuthContext } from '../../../../context/Auth';
 import { Carregando } from '../../../../components/Carregando';
 import NotificacaoProjetoRecusado from '../../../../components/notificacaoTemplate/projetoRecusado';
+import NotificacaoProjetoCancelado from '../../../../components/notificacaoTemplate/cancelado';
 
 export function NotificacoesAluno({ atualizandoPagina }) {
     const [notificacoes, setNotificacoes] = useState([]);
@@ -45,6 +46,14 @@ export function NotificacoesAluno({ atualizandoPagina }) {
                             {notificacoes.map((notificacao) => {
                                 if (notificacao.tipo === 'recusado') {
                                     return <NotificacaoProjetoRecusado
+                                        remetente={notificacao.remetenteNome}
+                                        titulo={notificacao.titulo}
+                                        convite={notificacao._id}
+                                        atualizar={atualizarPagina}
+                                    />
+                                }
+                                if (notificacao.tipo === 'cancelado') {
+                                    return <NotificacaoProjetoCancelado
                                         remetente={notificacao.remetenteNome}
                                         titulo={notificacao.titulo}
                                         convite={notificacao._id}

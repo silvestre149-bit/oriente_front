@@ -37,6 +37,7 @@ export default function NotificacaoCancelamento({ remetente, titulo, projetoId, 
             }
 
             await deletarUmProjeto(projetoId);
+            await deletarConvite(convite);
             await deletarVariosConvites(projetoId);
 
             return atualizar(true);

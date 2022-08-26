@@ -22,7 +22,7 @@ function RelatorioUm() {
   if (!alunos) return <div></div>
 
   const listaAlunos = alunos.filter((aluno) => {
-    return aluno.participacoes.length > 0 && aluno.etapa === 2;
+    return aluno.participacoes.length > 0;
   }).map((aluno) => {
     const alunos = {};
     const orientador = aluno.projetos[0].participantes.find(

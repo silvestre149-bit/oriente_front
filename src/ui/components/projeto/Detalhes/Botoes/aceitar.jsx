@@ -1,5 +1,5 @@
 import { useHistory } from "react-router-dom";
-import { deletarConvite, deletarTodosConvites, deletarVariosConvites } from "../../../../../api/convites";
+import { deletarConvite, deletarVariosConvites } from "../../../../../api/convites";
 import { Button } from "react-materialize";
 import { aceitarAvaliacao, aceitarSuplente } from "../../../../../api/professor";
 import { criarParticipacao } from "../../../../../api/cadastrar";

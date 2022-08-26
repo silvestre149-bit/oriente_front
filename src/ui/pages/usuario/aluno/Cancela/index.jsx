@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import { buscarPedidoAberto, enviarConvite } from '../../../../../api/convites';
 import { buscarProjetoDoAluno, buscarStatusDoOrientador } from '../../../../../api/projeto';
 import { Carregando } from '../../../../components/Carregando';
@@ -12,6 +13,8 @@ export function CancelaAluno() {
   const [carregando, setCarregando] = useState(true);
   const [pedido, setPedido] = useState();
   const [justificativa, setJustificativa] = useState('');
+  const [isDesabilitado, setDesabilitado] = useState(false);
+  const history = useHistory();
   const [feedback, setFeedback] = useState({
     status: '',
     descricao: '',
@@ -41,6 +44,7 @@ export function CancelaAluno() {
         descricao: 'Por favor, preencha o campo de justificativa'
       })
 
+      setDesabilitado(true);
     try {
       await enviarConvite({
         destinatario: 'coordenador',
@@ -51,12 +55,14 @@ export function CancelaAluno() {
         descricao: justificativa,
         tipo: 'cancelamento'
       });
-
-      return setFeedback({
+      setFeedback({
         status: 'sucesso',
         descricao: 'Pedido enviado com sucsso!'
       })
+
+      return history.push('/');
     } catch (e) {
+      setDesabilitado(false);
       console.log(e);
       return setFeedback({
         status: 'falha',
@@ -99,7 +105,7 @@ export function CancelaAluno() {
                     <label style={{ padding: "4px" }}>Justificativa</label>
                     <input onChange={(e) => setJustificativa(e.target.value)} id="justificativa" type="text" />
                     <div className="center">
-                      <ModalExcluirProjeto enviar={enviarPedidoDeCancelamento} resultado={feedback} />
+                      <ModalExcluirProjeto enviar={enviarPedidoDeCancelamento} desabilitado={isDesabilitado} resultado={feedback} />
                     </div>
                   </form>
                 </div>

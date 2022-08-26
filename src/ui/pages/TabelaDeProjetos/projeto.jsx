@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import { MdPersonOutline, MdFormatListBulleted, MdTimer, MdOutlinePendingActions } from 'react-icons/md'
+import { MdPersonOutline, MdFormatListBulleted, MdTimer } from 'react-icons/md'
 import { BreadcrumbsProjetoEspecifico } from '../../components/Breadcrumbs/ProjetoEspecificoBC';
 import { Carregando } from '../../components/Carregando/index.jsx';
 import { buscarAvaliadorDoProjeto, buscarOrientadorDoProjeto, buscarSuplenteDoProjeto, pegarProjeto } from '../../../api/projeto';
 import { ModalAdicionarAlunoProjeto } from '../../components/novos-modais/ProfModal/AdicionarAluno';
 import { ModalRemoverAlunoProjeto } from '../../components/novos-modais/ProfModal/RemoverAlunoProjeto';
+import { ModalExcluirProjeto } from '../../components/novos-modais/ProjetoModal/ExcluirProjeto';
 
 function Projeto() {
   const [projeto, setProjeto] = useState();
@@ -40,7 +41,6 @@ function Projeto() {
 
   if (carregando) return <Carregando />;
 
-  console.log(projeto);
   return <>
     <BreadcrumbsProjetoEspecifico />
     <div className="section card-title card">
@@ -50,6 +50,9 @@ function Projeto() {
         </div>
         <div className='col s3'>
           <ModalRemoverAlunoProjeto atualizar={atualizarComponente} dadosProjeto={projeto} />
+        </div>
+        <div className='col s3'>
+          <ModalExcluirProjeto dadosProjeto={projeto} />
         </div>
       </div>
       <div className="card-content">

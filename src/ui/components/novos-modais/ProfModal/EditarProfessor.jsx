@@ -160,7 +160,7 @@ export default function EditarProfessor({ atualizar }) {
                         <select class="browser-default select-options" value={professor} onChange={e => { pegarDadosProf(e.target.value); setProfessor(e.target.value) }}>
                             <option value="" disabled selected>Selecione um professor</option>
                             {carregado ? (
-                                data.sort().filter((professor) => {
+                                data.sort((a, b) => a.nome.localeCompare(b.nome)).filter((professor) => {
                                     return professor.tipo === "professor"
                                 }).map((professor) => {
                                     return <option value={professor._id}>{professor.nome}</option>

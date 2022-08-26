@@ -2,7 +2,7 @@ import { Collapsible, CollapsibleItem, Icon, Button } from 'react-materialize';
 import { deletarConvite } from '../../../api/convites';
 
 
-export default function NotificacaoProjetoRecusado({ remetente, titulo, atualizar, convite }) {
+export default function NotificacaoProjetoCancelado({ remetente, titulo, atualizar, convite }) {
     const marcarComoLido = async () => {
         try {
             await deletarConvite(convite);
@@ -16,10 +16,10 @@ export default function NotificacaoProjetoRecusado({ remetente, titulo, atualiza
         <Collapsible accordion>
             <CollapsibleItem
                 expanded={false}
-                header={`O professor ${remetente} recusou seu pedido para orientar o projeto ${titulo}`}
+                header={`O professor ${remetente} cancelou o projeto ${titulo}`}
                 icon={<Icon>sentiment_very_dissatisfied</Icon>}
                 node="div">
-                    <h4>Cadastre um novo projeto!</h4>
+                    <h6>Cadastre um novo projeto!</h6>
                 <div className="row">
                     <div className="col s2">
                         <Button style={{

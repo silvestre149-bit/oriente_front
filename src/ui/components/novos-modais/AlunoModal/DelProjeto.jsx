@@ -2,8 +2,9 @@ import React, { useEffect } from 'react';
 import { MdClose as Close } from "react-icons/md";
 import MessageTemplate from '../../errorMessageTemplate';
 import * as M from 'materialize-css';
+import { useState } from 'react';
 
-export function ModalExcluirProjeto({ enviar, resultado }) {
+export function ModalExcluirProjeto({ enviar, resultado, desabilitado }) {
     useEffect(() => {
         var elemsModal = document.querySelectorAll(".modal");
         M.Modal.init(elemsModal, {
@@ -12,6 +13,7 @@ export function ModalExcluirProjeto({ enviar, resultado }) {
             dismissible: false,
         });
     }, []);
+
     return <>
         <div>
             <div style={{ marginBottom: '15px' }}>
@@ -28,13 +30,13 @@ export function ModalExcluirProjeto({ enviar, resultado }) {
                             <h4 style={{ marginTop: '1em', fontSize: '1.8em' }}><b>Confirmação de cancelamento</b></h4>
                             <p style={{ marginTop: '2em', fontSize: '1.2em', marginBottom: '1.5em' }}><b>Tem certeza que deseja enviar a solicitação de cancelamento?</b></p>
                         </div>
-                    </div>
                     <MessageTemplate mensagem={resultado} />
                     <div className="modal-footer" style={{
                         display: "flex", justifyContent: "right", marginBottom: "1.5em", paddingRight: "3rem"
                     }}>
-                        <button onClick={enviar} type="button" id="encerrar" className="btn red accent-4" style={{ marginRight: '1rem' }}>Enviar</button>
+                        <button onClick={enviar} disabled={desabilitado} type="button" id="encerrar" className="btn red accent-4" style={{ marginRight: '1rem' }}>Enviar</button>
                         <button type="button" id="naoEncerrar" className="modal-close btn grey">Não enviar</button>
+                    </div>
                     </div>
                 </div>
             </div>
