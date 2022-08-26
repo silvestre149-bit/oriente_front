@@ -6,6 +6,7 @@ import { atualizarSemestre, pegarSemestreAberto } from '../../../api/semestre.js
 import { Carregando } from '../Carregando';
 import ModalAdicionarSessao from '../novos-modais/SessaoModal/ModalAdicionarSessao';
 import ModalEditarSessao from '../novos-modais/SessaoModal/ModalEditarSessao';
+import MessageTemplate from '../errorMessageTemplate';
 
 function HomeCoordenador() {
     const [semestre, setSemestre] = useState([]);
@@ -17,6 +18,10 @@ function HomeCoordenador() {
     const [carregando, setCarregando] = useState(true);
     const [dado, setNovosDados] = useState(false);
     const [isDesabilitado, setDesabilitado] = useState(false);
+    const [feedback, setFeedback] = useState({
+        status: '',
+        descricao: ''
+    });
     const atualizarPagina = () => setNovosDados(!dado);
 
     useEffect(() => {
@@ -39,14 +44,29 @@ function HomeCoordenador() {
     async function atualizarInformacoes(e) {
         e.preventDefault();
         setDesabilitado(true);
+
+        setFeedback({
+            status: 'sucesso',
+            descricao: 'Salvando alterações, aguarde!'
+        });
+
         try {
             await atualizarSemestre(semestre[0]._id, {
                 permissoes: permissoes
             });
     
-            return atualizarPagina();
+            setFeedback({
+                status: 'sucesso',
+                descricao: 'Alterações salvas com sucesso!'
+            });
+
+            return document.location.reload();
         } catch (error) {
             console.log(error);
+            setFeedback({
+                status: 'falha',
+                descricao: 'Erro ao salvar alterações, tente novamente!'
+            });
             return setDesabilitado(false);
         }
     };
@@ -234,6 +254,7 @@ function HomeCoordenador() {
                                 </form>
                             </ul>
                         </div>
+                        <MessageTemplate mensagem={feedback} />
                         <div className="row">
                             <div className="col s4">
                                 <ModalEncerrarSemestre atualizar={atualizarPagina} />
