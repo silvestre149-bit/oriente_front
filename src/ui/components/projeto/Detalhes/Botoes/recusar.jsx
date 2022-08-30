@@ -4,6 +4,7 @@ import { deletarConvite, deletarVariosConvites, enviarConvite } from "../../../.
 import { Button } from "react-materialize";
 import { useEffect, useState } from "react";
 import { removerParticipacaoUsuario } from "../../../../../api/aluno";
+import { gerarRelatorio } from "../../../../../api/relatorio";
 import { useContext } from "react";
 import { AuthContext } from "../../../../context/Auth";
 
@@ -13,6 +14,8 @@ export default function RecusarConvite({ projeto, tipo, convite }) {
     const [dadosProjeto, setProjeto] = useState([]);
     const [isDesabilitado, setDesabilitado] = useState(false);
     const { usuario } = useContext(AuthContext);
+    const data = new Date();
+    const dataFormatada = data.getDate() + "/" + (data.getMonth() + 1) + "/" + data.getFullYear();
 
     useEffect(() => {
         const pegarParticipacao = async () => {
@@ -29,6 +32,7 @@ export default function RecusarConvite({ projeto, tipo, convite }) {
         buscarProjeto();
     }, []);
 
+    console.log(participacoes);
     const recusarConvite = async (e) => {
         e.preventDefault();
 
@@ -48,6 +52,13 @@ export default function RecusarConvite({ projeto, tipo, convite }) {
                         titulo: dadosProjeto.titulo
                     })
                 })
+                console.log(participacoes);
+                await gerarRelatorio({
+                    titulo: dadosProjeto.titulo,
+                    alunos: participacoes.filter((participante) => participante.tipo === 'aluno'),
+                    orientador: usuario.nome,
+                    data: dataFormatada,
+                });
                 await deletarUmProjeto(projeto);
                 await deletarVariosConvites(projeto);
             };
@@ -64,10 +75,10 @@ export default function RecusarConvite({ projeto, tipo, convite }) {
 
     return <>
         <Button
-        disabled={isDesabilitado} 
-        style={{
-            backgroundColor: 'red',
-        }}
+            disabled={isDesabilitado}
+            style={{
+                backgroundColor: 'red',
+            }}
             onClick={(e) => { recusarConvite(e) }}>Recusar</Button>
     </>
 }

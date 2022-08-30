@@ -44,8 +44,8 @@ export default function NotificacaoOrientacao({ remetente, titulo, projetoId, co
         horas: "",
         local: ""
     });
-    var data = new Date();
-    var dataFormatada = data.getDate() + "/" + (data.getMonth() + 1) + "/" + data.getFullYear();
+    const data = new Date();
+    const dataFormatada = data.getDate() + "/" + (data.getMonth() + 1) + "/" + data.getFullYear();
 
     useEffect(() => {
         const pegarSemestre = async () => {

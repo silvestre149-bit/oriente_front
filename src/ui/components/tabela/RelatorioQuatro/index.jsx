@@ -22,6 +22,8 @@ function RelatorioQuatro() {
     }
   })
 
+  console.log(relatorios);
+  console.log(relatorioFormatado);
   if(!relatorioFormatado) return <div></div>
   
   return <>
