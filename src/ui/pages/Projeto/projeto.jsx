@@ -84,11 +84,6 @@ export default function ProjetoControle() {
     }
   }
 
-  console.log(projeto);
-  console.log(participacoes);
-  console.log(semestre);
-  console.log(usuario);
-
   if (carregando || !projeto) return <Carregando />
 
   return <>

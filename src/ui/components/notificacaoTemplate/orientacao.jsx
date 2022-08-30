@@ -11,6 +11,7 @@ import { inserirParticipacaoUsuario, removerParticipacaoUsuario } from '../../..
 import { criarParticipacao } from '../../../api/cadastrar.js';
 import { pegarSemestreAberto } from '../../../api/semestre.js';
 import { useEffect } from 'react';
+import { gerarRelatorio } from '../../../api/relatorio.js';
 
 const dias = [
     "Segunda-feira",
@@ -43,6 +44,8 @@ export default function NotificacaoOrientacao({ remetente, titulo, projetoId, co
         horas: "",
         local: ""
     });
+    var data = new Date();
+    var dataFormatada = data.getDate() + "/" + (data.getMonth() + 1) + "/" + data.getFullYear();
 
     useEffect(() => {
         const pegarSemestre = async () => {
@@ -63,10 +66,12 @@ export default function NotificacaoOrientacao({ remetente, titulo, projetoId, co
         const buscarProjeto = async () => {
             const res = await pegarProjeto(projetoId);
             setProjeto(res.data);
-        }
+        };
+
         pegarSemestre();
         pegarConvitesAbertos();
         pegarParticipantes();
+        buscarProjeto();
     }, [])
 
     const pegarValores = (e) => {
@@ -131,7 +136,13 @@ export default function NotificacaoOrientacao({ remetente, titulo, projetoId, co
                         tipo: "recusado",
                         titulo: projeto.titulo
                     })
-                })
+                });
+                await gerarRelatorio({
+                    titulo: projeto.titulo,
+                    alunos: participacoes.filter((participante) => participante.tipo === 'aluno'),
+                    orientador: usuario.nome,
+                    data: dataFormatada,
+                });
                 await deletarUmProjeto(projetoId);
                 await deletarVariosConvites(projetoId);
             };

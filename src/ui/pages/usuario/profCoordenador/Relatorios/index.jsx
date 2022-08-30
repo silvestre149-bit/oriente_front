@@ -2,6 +2,7 @@ import React from 'react';
 import RelatorioUm from '../../../../components/tabela/RelatorioUm';
 import RelatorioDois from '../../../../components/tabela/RelatorioDois';
 import RelatorioTres from '../../../../components/tabela/RelatorioTres';
+import RelatorioQuatro from '../../../../components/tabela/RelatorioQuatro';
 import { BreadcrumbsRelatorios } from '../../../../components/Breadcrumbs/RelatoriosBC';
 export function RelatorioProfCoordenador() {
   return <>
@@ -16,5 +17,6 @@ export function RelatorioProfCoordenador() {
     <hr />
     <RelatorioTres />
     <br />
+    <RelatorioQuatro />
   </>
 }
